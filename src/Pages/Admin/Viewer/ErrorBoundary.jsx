@@ -11,15 +11,14 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error caught by Error Boundary:", error, errorInfo);
+    console.error("Error caught in error boundary: ", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return <h1>Something went wrong.</h1>;
     }
-
-    return this.props.children; 
+    return this.props.children;
   }
 }
 

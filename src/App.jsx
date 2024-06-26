@@ -25,7 +25,7 @@ const App = () => {
         <Route path='/userDashboard' element={<UserDashboard/>}/>
         <Route path='/adminDashboard' element={<AdminDashboard/>}/>
         <Route path='/lessonPlans' element={<LessonPlans/>}/>
-    
+        
       </Routes>
     </BrowserRouter>
     </GeneralProvider>

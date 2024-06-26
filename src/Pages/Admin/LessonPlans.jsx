@@ -556,17 +556,14 @@ const LessonPlans = () => {
               <FaComment onClick={handleCommentToggle} className="lg:hidden cursor-pointer" color="#6675FF" size={20}/>
                
                
-          {isViewerVisible && (
+          {/* {isViewerVisible && (
             <div>
-              <FaTimes className="cursor-pointer" size={30} color="black" onClick={() => setIsViewerVisible(false)} />
-              <PdfViewer fileUrl = {plan.fileUrl}/>
-            </div>
-          )}
-  
+              <FaTimes className="cursor-pointer" size={30} color="black" onClick={() => setIsViewerVisible(false)} /> */}
               
-           
-             
-              {/* {plan.comments && plan.comments.map((comment, index) => (
+            {/* </div>
+          )} */}
+  
+            {/* {plan.comments && plan.comments.map((comment, index) => (
                 <div key={index} className="border p-2 mt-2 rounded-lg">
                   {comment.text}
                 </div>
@@ -595,7 +592,9 @@ const LessonPlans = () => {
                 </fieldset>
                 <FaTelegram className="cursor-pointer mt-5"  onClick={() => submitComment(plan._id)}  color="#6675FF" size={50}/>
                 </div>
+                <PdfViewer fileUrl = {plan.fileUrl}/>
             </div>
+            
           ))}
        
           

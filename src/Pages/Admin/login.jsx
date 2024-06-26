@@ -4,28 +4,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GeneralContext } from '../../Context/Context';
 import { ThreeDots } from 'react-loader-spinner';
 import check from '../../assets/check_3699516.png'
+import { FaCheckCircle } from 'react-icons/fa';
 
 const LoginAdmin = () => {
   const { AdminLoginChange, handleAdminloginSubmit, AdminLoginForm, isLoading, isSuccess } = useContext(GeneralContext);
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (isSuccess) {
-        
-        navigate('/adminDashboard')
+    if (isSuccess) {        
+        navigate('/lessonPlans')
     } else {
         console.log('error')
     }
-  }, [])
+  }, []);
+
   return (
     <>
       <div>
-        <div className='flex lg:flex-row flex-col border lg:w-[75rem] lg:mt-10 shadow-xl rounded-xl md:flex-row mx-auto justify-center gap-10 items-center'>
+        <div className='flex lg:flex-row flex-col border lg:w-[75rem] lg:mt-10 shadow-xl rounded-xl md:flex-row mx-auto justify-center lg:py-1 py-10 gap-10 items-center'>
           <div>
-            <img className='h-[43rem] mt-3 rounded-lg' src={signup} alt="SignUp page" />
+            <img className='h-[43rem] lg:block hidden mt-3 rounded-lg' src={signup} alt="SignUp page" />
           </div>
           <form className='flex flex-col gap-10' onSubmit={handleAdminloginSubmit}>
-            <h3 className='text-2xl font-bold mx-auto'>Welcome Back!</h3>
+            <h3 className='text-2xl font-bold py-4 mx-auto'>Welcome Back!</h3>
     
             <fieldset>
               <input
@@ -70,15 +71,24 @@ const LoginAdmin = () => {
             </button>
           </form>
         </div>
-        <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
-        <div>
-          <h2 className='text-white absolute text-2xl left-[29.8%] top-[43%] lg:top-[43%]'>
+
+        <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
+
+        <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
+        <FaCheckCircle size={80} color='green'/>
+        <h2 className='font-medium'>Sign Up SuccessFul!</h2>
+        </div>
+
+        <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] w-[28.8rem] hidden opacity-70 absolute top-[3.3rem]' />
+
+        <div className='lg:block w-screen flex absolute top-36 justify-around'>
+          <h2 className='lg:text-white lg:absolute lg:text-2xl left-[29.8%] top-[43%] lg:top-[43%]'>
             <Link to={'/adminSignUp'}>Sign Up</Link>
           </h2>
-          <h2 className='text-orange-500 font-bold absolute text-2xl left-[30.8%] top-[43%] lg:top-[53%]'>
+          <h2 className='text-orange-500 font-bold lg:absolute lg:text-2xl left-[30.8%] top-[43%] lg:top-[53%]'>
             <Link to={'/adminLogin'}>Login</Link>
           </h2>
-          <h2 className='text-white absolute text-xl left-[30.8%] cursor-pointer underline top-[43%] lg:top-[80%]'>
+          <h2 className='lg:text-white lg:absolute lg:text-xl left-[30.8%] cursor-pointer underline top-[43%] lg:top-[80%]'>
             <Link to={'/signUp'}>User</Link>
           </h2>
         </div>

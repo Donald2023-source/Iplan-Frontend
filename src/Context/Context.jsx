@@ -84,7 +84,8 @@ export const GeneralProvider = ({ children }) => {
   const [lessonPlans, setLessonPlans] = useState([])
   const [selectedClassId, setSelectedClassId] = useState('');
   const [subjects, setSubjects] = useState([]);
-  const [myId, setMyId] = useState(getMyIdFromLocalStorage)
+  const [myId, setMyId] = useState(getMyIdFromLocalStorage);
+  const [isSelected, setIsSelected] =useState(false)
   
   const [terms, setTerms] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -319,7 +320,7 @@ export const GeneralProvider = ({ children }) => {
 
   const handleSubjectChange = (e) => {
     const selectedSubjectId = parseInt(e.target.value); // Parse as integer
-    localStorage.setItem('selectedSubjectId', selectedSubjectId); // Store in localStorage
+    localStorage.setItem('selectedSubjectId', selectedSubjectId); 
     setSelectedSubjectId(selectedSubjectId); // Update state
   };
   

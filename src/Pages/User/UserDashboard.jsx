@@ -2,10 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { GeneralContext } from "../../Context/Context";
 import color from '../../assets/Color.jpg';
 import cap from '../../assets/Cap (2).jpg';
-
-
-
-
+import { FaCheckCircle, FaTimes, FaUpload, FaUserCheck } from "react-icons/fa";
 
 const UserDashboard = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -31,36 +28,9 @@ const UserDashboard = () => {
       return '';
     }
   };
-
   const {
-    selectedSession,
-    selectedSessionId,
-    selectedTermId,
-    selectedClassId,
-    classId,
-    selectedTerm,
-    setSelectedSession,
-    setSelectedTerm,
-    setSelectedTermId,
-    classes,
-    sessions,
-    terms,
-    subjects,
-    setClasses,
-    setSessions,
-    setTerms,
-    setSelectedClassId,
-    setSubjects,
-    setClassId,
-    setSelectedSessionId,
-    fetchSessions,
-    handleSessionChange,
-    handleTermChange,
-    fetchTerms,
-    fetchSubjects,
-    fetchClasses,
-    handleClassSelect,
-    classItems
+    selectedSession, selectedSessionId, selectedTermId,selectedClassId, classId, selectedTerm, setSelectedSession,setSelectedTerm, setSelectedTermId, classes,sessions, terms, subjects, setClasses, setSessions, setTerms, setSelectedClassId, setSubjects, setClassId, setSelectedSessionId, fetchSessions, handleSessionChange,
+    handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect,classItems
   } = useContext(GeneralContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -70,11 +40,19 @@ const UserDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedLessonPlanId, setSelectedLessonPlanId] = useState(getLessonPlanIdFromLocalStorage);
   const [comments, setComments] = useState([]);
+  const [isUploadDialogue, setIsUploadDialogue] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [message, setMessage] = useState('')
+  
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
+  const handleUploadSuccess =() => {
+    setUploadSuccess(!uploadSuccess)
+    
+  }
   useEffect(() => {
     fetchSessions();
     fetchClasses();
@@ -144,6 +122,10 @@ const UserDashboard = () => {
     }
   }, []);
 
+  const handleDialogue = () => {
+    setIsUploadDialogue(!isUploadDialogue)
+  }
+
   useEffect(() => {
     localStorage.setItem('selectedSubjectId', selectedSubjectId);
   }, [selectedSubjectId]);
@@ -179,6 +161,8 @@ const UserDashboard = () => {
         setTitle('');
         setSelectedFile(null);
         setErrorMessage('');
+        setUploadSuccess(true)
+        setMessage('')
         // Fetch updated lesson plans after uploading a new lesson plan
         fetchUserLessonPlans();
       } else {
@@ -203,9 +187,6 @@ const UserDashboard = () => {
     }
   };
 
-  const FetchUserLessonPlans = async() =>{
-
-  }
 
   const fetchComments = async () => {
     try {
@@ -235,64 +216,115 @@ const UserDashboard = () => {
 
   return (
     <div>
-      <div className='bg-repeat w-screen flex'>
-        <img className='w-[28rem] h-[18rem]' src={color} alt="" />
-        <img className='w-[28rem] h-[18rem]' src={color} alt="" />
-        <img className='w-[28rem] h-[18rem]' src={color} alt="" />
-        <img className='w-[28rem] h-[18rem]' src={color} alt="" />
-      </div>
-      <div className='bg-black w-screen h-[18rem] absolute top-0 opacity-60'/>
-      <div className='absolute flex items-center gap-4 top-20 left-[25%] lg:left-[40%]'>
-        <span className='flex items-center gap-10'>
-          <img className='h-16 rounded-[40%]' src={cap} alt="" />
-          <h2 className='text-white font-medium text-3xl'>Iplan</h2>
-        </span>
-      </div>
+  <div>
+       <div>
+            <div>
+                </div>
+                      <div className='mt-3'>
+                           <div className="flex justify-between items-center shadow-lg py-3 bg-white rounded-xl px-8 my-3 mx-2">
+                              <h2 className="font-bold mx-auto">04:10:00</h2>
+                       </div>
+                     </div>
+                </div>
+              <div className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
+          <h2 className="text-center text-3xl">Welcome <span className="font-medium">Sandra!</span></h2>
+        <h2 className="text-center py-4">Welcome to Iplan</h2>
+    </div>
+ </div>
 
-      <select value={selectedSessionId || ''} onChange={handleSessionChange}>
+    <div className="grid lg:grid-cols-4 gap-4 py-5 grid-cols-2 md:grid-cols-3 w-screen">
+      {/* Sessions */}
+      <div className="bg-white px-3 lg:px-5 w-fit mx-auto md:44 rounded-lg border py-2">
+      <h2 className="font-medium text-center text-lg">Sessions</h2>
+      <select className="rounded-xl p-2 focus:outline-none cursor-pointer w-[9rem] text-sm lg:w-64 border" value={selectedSessionId || ''} onChange={handleSessionChange}>
         <option value="">Select session</option>
         {sessions.map((session) => (
           <option key={session._id} value={session._id}>{session.name}</option>
         ))}
       </select>
+      </div>
 
-      <select value={selectedTermId || ''} onChange={handleTermChange}>
+      {/* ====Terms====== */}
+      <div className="bg-white px-3 lg:px-5 w-fit mx-auto rounded-lg border py-2">
+      <h2 className="font-medium text-center text-lg">Terms</h2>
+      <select  className="rounded-xl p-2 focus:outline-none cursor-pointer w-[9rem] lg:w-64 border" value={selectedTermId || ''} onChange={handleTermChange}>
         <option value="">Select term</option>
         {terms.map((term) => (
           <option key={term._id} value={term._id}>{term.name}</option>
         ))}
       </select>
+      </div>
 
-      <select onChange={handleClassSelect} value={selectedClassId || ''}>
+    {/* ====Class===== */}
+    <div className="bg-white px-3 lg:px-5 w-fit mx-auto rounded-lg border py-2">
+    <h2 className="font-medium text-center text-lg">Class</h2>
+      <select required className="rounded-xl p-2 focus:outline-none cursor-pointer w-[9rem] lg:w-64 border" onChange={handleClassSelect} value={selectedClassId || ''}>
         <option value="">Select class</option>
         {classItems}
       </select>
+      </div>
 
-      <select value={selectedSubjectId || ''} onChange={handleSubjectChange}>
+    {/* Subject */}
+  <div className="bg-white px-3 lg:px-5 w-fit mx-auto rounded-lg border py-2">
+  <h2 className="font-medium text-center text-lg">Subject</h2>
+      <select className="rounded-xl p-2 focus:outline-none cursor-pointer w-[9rem] lg:w-64 border" value={selectedSubjectId || ''} onChange={handleSubjectChange}>
         <option value="">Select subject</option>
         {subjects.map((subject) => (
           <option key={subject._id} value={subject.id}>{subject.name}</option>
         ))}
       </select>
+  </div>
 
-      <div>
-        <form onSubmit={handleFileUpload}>
-          <div>
-            <label>Title:</label>
-            <input name="title" value={title} onChange={handleTitleChange} placeholder="Please enter your lesson plan title" type="text" />
+      {/* =====File Upload Dialogue ==== */}
+    <div onClick={handleDialogue} className={isUploadDialogue ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
+
+      <div className={isUploadDialogue ? "border shadow-lg bg-white fixed inset-0 rounded-lg w-fit mx-auto h-fit top-10" : 'hidden'}>
+        
+        <form className="flex flex-col rounded-lg gap-6 px-3 py-6 items-center" onSubmit={handleFileUpload}>
+          <span className="flex justify-between w-[20rem]">
+          <h2 className="font-medium">Upload Lesson Plan</h2>
+          <FaTimes onClick={handleDialogue} className="cursor-pointer" size={25} color="black"/>
+          </span>
+          <div className="flex gap-3 items-center">
+            <label className="text-sm">Title:</label>
+            <input name="title" 
+            value={title} 
+            onChange={handleTitleChange} 
+            placeholder="Please enter your lesson plan title" type="text"
+            className="p-2 border w-[20rem] lg:w-[25rem] rounded-lg"
+            />
           </div>
 
-          <div>
-            <label>Lesson Plan File:</label>
-            <input name="lessonPlan" onChange={handleFileChange} type="file" />
+          <div className="flex gap-4 items-center">
+            <label>File</label>
+            <input className="p-2 lg:w-[25rem] rounded-lg border" name="lessonPlan" onChange={handleFileChange} type="file" />
           </div>
 
           {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
-          <button className='bg-blue-700 rounded-lg p-2 text-white' type="submit">Upload Lesson Plan</button>
+          <button className='bg-blue-700 hover:scale-105 transition rounded-lg p-2 text-white' type="submit">Upload</button>
         </form>
       </div>
+      </div>
 
+{/* Upload Icon */}
+      <FaUpload className="mx-auto cursor-pointer my-4" onClick={handleDialogue} size={55} color="blue"/>
+
+
+    {/* Success Message */}
+      <div onClick={handleUploadSuccess} className={uploadSuccess ? "h-screen inset-0 fixed opacity-80 bg-black" : 'hidden'}/>
+
+      {uploadSuccess && (
+        <div className="flex lg:w-80 left-0 right-0 fixed top-[40%] bg-white gap-6 flex-col items-center p-5 rounded-lg shadow-lg w-fit mx-auto">
+          <FaCheckCircle size={60} color="green"/>
+          <h4>Lesson Plan Uploaded successfully</h4>
+          <h4 className="text-red-400">{message}</h4>
+          <button onClick={handleUploadSuccess} className="p-2 border rounded-lg bg-green-700 text-white">Ok!</button>
+        </div>
+      )}
+
+
+<div className="flex items-center justify-around">
       <div>
         <h2>My Lesson Plans</h2>
         <div>
@@ -300,24 +332,31 @@ const UserDashboard = () => {
             lessonPlans.map((plan) => (
               <div key={plan._id} onClick={() => handleLessonPlanSelect(plan._id)}>
                 <h2>{plan.title}</h2>
-                {/* Ensure that 'plan.file' contains the correct URL */}
-                {/* <PdfViewer fileUrl={plan.fileUrl} /> */}
               </div>
             ))}
         </div>
       </div>
 
       <div>
-        <h2>Comments</h2>
         <div>
           {Array.isArray(comments) &&
             comments.map((comment) => (
               <div key={comment._id}>
-                <p>{comment.text}</p>
+                <fieldset className="shadow-lg hidden lg:flex items-center lg:text-md text-sm md:text-md justify-around rounded-lg bg-white  w-64">
+       <input 
+       type="text" 
+       value={comment.text} 
+       readOnly
+       className=" text-wrap rounded-lg focus:outline-none p-2"
+        />      
+        <FaCheckCircle color="gray" size={10}/>   
+       </fieldset>
               </div>
             ))}
         </div>
-      </div>
+        </div>
+        <button className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">View </button>
+    </div>
     </div>
   );
 };

@@ -17,7 +17,7 @@ const LandingPage = () => {
         <div className='bg-black absolute top-0 opacity-80 h-screen w-screen'/>
 
         <div className='absolute lg:left-[24%] top-[40%] flex flex-col gap-2 items-center px-2 text-white'>
-            <h4 className='text-4xl lg::text-center'><TypeAnimation
+            <h4 className='lg:text-4xl text-xl lg:text-center'><TypeAnimation
       sequence={[
         'Welcome to Iplan',
         5000,
@@ -29,7 +29,7 @@ const LandingPage = () => {
       repeat={Infinity}
     />
   </h4>
-            <p className='py-3 text-lg text-center'>A suitable Platform to help to submit and keep record of your educational schedule for each session</p>
+            <p className='py-3 lg:text-lg text-sm text-center'>A suitable Platform to help to submit and keep record of your educational schedule for each session</p>
             <button className='flex lg:mx-auto shadow-xl w-fit bg-black rounded-lg text-white p-3 hover:scale-100'><Link to={'/signUp'}>Get Started</Link></button>
         </div>
     </div>

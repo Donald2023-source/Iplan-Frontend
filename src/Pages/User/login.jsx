@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import signup from '../../assets/landing-3.jpg';
 import { Link, NavLink, redirect, useNavigate } from 'react-router-dom';
 import { GeneralContext } from '../../Context/Context';
 import { ThreeDots } from 'react-loader-spinner';
-import check from '../../assets/check_3699516.png'
+import { FaCheckCircle } from 'react-icons/fa';
 
 const LoginUser = () => {
   const {setUser, isLoading, isSuccess, setIsSuccess, setIsLoading } = useContext(GeneralContext);
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -20,6 +20,14 @@ const LoginUser = () => {
       [name]: value
     });
   };
+
+  useEffect(() => {
+    if(isSuccess) {
+      navigate('/userDashboard')
+    } else{
+      alert('Error Navigating')
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,13 +62,13 @@ const LoginUser = () => {
 
   return (
     <>
-      <div>
-        <div className='flex lg:flex-row flex-col border lg:w-[75rem] lg:mt-10 shadow-xl rounded-xl md:flex-row mx-auto justify-center gap-10 items-center'>
+      <div className='shadow-xl rounded-xl border'>
+        <div className='flex lg:flex-row flex-col lg:w-[75rem] lg:mt-10 md:flex-row mx-auto h-[36rem] justify-center lg:gap-10 md:gap-10 gap-16 items-center'>
           <div>
-            <img className='h-[43rem] mt-3 rounded-lg' src={signup} alt="SignUp page" />
+            <img className='h-[43rem] lg:block hidden mt-3 rounded-lg' src={signup} alt="SignUp page" />
           </div>
           <form className='flex flex-col gap-10' onSubmit={handleSubmit}>
-            <h3 className='text-2xl font-bold mx-auto'>Login</h3>
+            <h3 className='text-2xl py-3 font-bold mx-auto'>User Login</h3>
     
             <fieldset>
               <input
@@ -93,24 +101,25 @@ const LoginUser = () => {
             </button>
           </form>
         </div>
-        <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
-        <div>
-          <h2 className='text-white absolute text-2xl left-[29.8%] top-[43%] lg:top-[43%]'>
+        <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] hidden w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
+        <div className='py-4 flex absolute top-48 w-screen justify-around lg:block'>
+          <h2 className='lg:text-white lg:absolute lg:text-2xl left-[29.8%] top-[43%] lg:top-[43%]'>
             <Link to={'/signUp'}>Sign Up</Link>
           </h2>
-          <h2 className='text-orange-500 font-bold absolute text-2xl left-[30.8%] top-[43%] lg:top-[53%]'>
+          <h2 className='text-orange-500 font-bold lg:absolute lg:text-2xl left-[30.8%] top-[43%] lg:top-[53%]'>
             <Link to={''}>Login</Link>
           </h2>
-          <h2 className='text-white absolute text-xl left-[30.8%] cursor-pointer underline top-[43%] lg:top-[80%]'>
-            <Link to={'/adminSignUp'}>Admin</Link>
+          <h2 className='lg:text-white lg:absolute lg:text-xl left-[30.8%] cursor-pointer underline top-[43%] lg:top-[80%]'>
+            <Link to={'/adminSignUp'}>Admin?</Link>
           </h2>
         </div>
       </div>
-      {isSuccess ? (
-        <div className='absolute top-5 left-[50%] bg-black text-white shadow-lg py-3 px-5 rounded'>
-          <h2 className='flex items-center gap-2'><img className='h-5' src={check} alt="" />Login Successful</h2>
-        </div>
-      ) : null}
+      <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
+
+    <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
+    <FaCheckCircle size={80} color='green'/>
+    <h2 className='font-medium'>Login SuccessFul!</h2>
+    </div>
 
       {isLoading && (
         <div style={{ height: '100vh', width: '100vw', backgroundColor: 'black', opacity: '0.92', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
