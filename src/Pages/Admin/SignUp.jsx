@@ -90,10 +90,13 @@ const SignUp = () => {
             </div>
             <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
 
-            <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
-            <FaCheckCircle size={80} color='green'/>
-            <h2 className='font-medium'>Sign Up SuccessFul!</h2>
-            </div>
+                {isSuccess && (
+                     <div  className='flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'>
+                     <FaCheckCircle size={80} color='green'/>
+                     <h2 className='font-medium'>Sign Up SuccessFul!</h2>
+                     </div>
+                )}
+           
 
             <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] hidden w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
             <div className='absolute top-20 md:block flex justify-around w-screen py-3 lg:block'>

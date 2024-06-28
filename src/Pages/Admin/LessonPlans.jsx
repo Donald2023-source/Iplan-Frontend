@@ -7,6 +7,8 @@ import { FaHome, FaBook, FaPlus, FaComment, FaTimes } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaTelegram } from "react-icons/fa";
 import PdfViewer from "./Viewer/lessonPlanViewer";
+import Success from "../../Components/success";
+import { ThreeDots } from "react-loader-spinner";
 
 const LessonPlans = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -49,6 +51,10 @@ const LessonPlans = () => {
     handleClassSelect,
     classItems,
     myId,
+    setIsSuccess,
+    isSuccess,
+    isLoading,
+    setIsLoading
   } = useContext(GeneralContext);
 
   const [newTerm, setNewTerm] = useState({ name: '', startDate: '', endDate: '' });
@@ -73,6 +79,9 @@ const LessonPlans = () => {
   const [toggleComment, setToggleComment] = useState(false);
   const [isViewerVisible, setIsViewerVisible] = useState(false);
   const [currentFileUrl, setCurrentFileUrl] = useState(null);
+  const [selectedLessonPlanIds, setSelectedLessonPlanIds] = useState([]);
+  const [comments, setComments] = useState({});
+  const [message, setMessage] = useState('')
 
   const toggleConfirmation = () => {
     setIsConfirm(!isConfirm)
@@ -92,9 +101,7 @@ const LessonPlans = () => {
   const toggleTermDelete  = () => {
     setIsDelete(!isDelete)
   };
-  const toggleAside = () => {
-    setIsSideVisible(!isSideVisible)
-  };
+
   const handleCommentToggle = () => {
     setToggleComment(!toggleComment)
   }
@@ -103,10 +110,6 @@ const LessonPlans = () => {
     setIsViewerVisible(!isViewerVisible);
   };
 
-
-  const [selectedLessonPlanIds, setSelectedLessonPlanIds] = useState([]);
-  const [isHovered, setIsHovered] = useState(false);
-  const [comments, setComments] = useState({});
 
   useEffect(() => {
     fetchSessions();
@@ -171,6 +174,7 @@ const LessonPlans = () => {
 
   const createSession = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
     try {
       const response = await fetch('http://localhost:3000/sessions', {
         method: 'POST',
@@ -185,7 +189,9 @@ const LessonPlans = () => {
       }
       const responseData = await response.json();
       console.log('Session created successfully:', responseData);
-      const message = response.message
+      setIsSuccess(true);
+      setIsLoading(false)
+      setMessage(responseData.message);
       fetchSessions();
     } catch (error) {
       console.error('Error creating new session:', error.message);
@@ -193,6 +199,7 @@ const LessonPlans = () => {
   };
 
   const deleteSession = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}`, {
         method: "DELETE",
@@ -202,8 +209,11 @@ const LessonPlans = () => {
       fetchSessions();
       setSelectedSessionId('');
       setSelectedSession('');
+      setIsLoading(false);
+      toggleConfirmation();
       setSelectedTermId('');
       setSelectedTerm('');
+      
     } catch (error) {
       console.error('Error deleting session', error.message);
     }
@@ -211,6 +221,7 @@ const LessonPlans = () => {
 
   
   const deleteSelectedLessonPlans = async () => {
+    setIsLoading(true)
     try {
       const deletePromises = selectedLessonPlanIds.map(lessonPlanId => {
         return fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${classId}/subjects/${selectedSubjectId}/lessonPlans/${lessonPlanId}`, {
@@ -219,8 +230,9 @@ const LessonPlans = () => {
       });
 
       await Promise.all(deletePromises);
-
+      
       console.log('Selected lesson plans deleted');
+      setIsLoading(false);
       fetchLessonPlans(); 
       setSelectedLessonPlanIds([]); 
     } catch (error) {
@@ -231,6 +243,7 @@ const LessonPlans = () => {
 
   const createNewTerm = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
     try {
       const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms`, {
         method: 'POST',
@@ -241,6 +254,7 @@ const LessonPlans = () => {
       });
       if (response.ok) {
         const responseData = await response.json();
+        setIsLoading(false)
         console.log('Term Created Successfully', responseData);
         fetchTerms(selectedSessionId);
       }
@@ -250,15 +264,19 @@ const LessonPlans = () => {
   };
 
   const deleteTerm = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}`, {
         method: "DELETE",
       });
       const data = await response.json();
+      setIsLoading(false)
       console.log('Term deleted', data);
       fetchTerms(selectedSessionId);
       setSelectedTermId('');
       setSelectedTerm('');
+      toggleTermDelete();
+      createSessionDialogue();
     } catch (error) {
       console.error('Error deleting term', error.message);
     }
@@ -394,9 +412,12 @@ const LessonPlans = () => {
           </div>
           
           {/* <h2 className="bg-red-900 p-2 w-32 rounded cursor-pointer" onClick={deleteSession}>Del</h2> */}
-               
-          <form className={createSessionDialogue ? "flex flex-col justify-center mx-auto z-50 m-auto p-10 bg-white h-fit shadow-lg rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'} onSubmit={createSession}>
+         
+              <form className={createSessionDialogue ? "flex flex-col justify-center mx-auto z-50 m-auto p-10 bg-white h-fit shadow-lg rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'} onSubmit={createSession}>
+              <span className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-center text-[#002E]">Create Session</h2>
+              <FaTimes onClick={toggleDialogue} className="cursor-pointer" color="black" size={25}/>
+            </span>
             <input
               type="text"
               name="name"
@@ -436,11 +457,21 @@ const LessonPlans = () => {
               required
               className="p-2 rounded-md border"
             />
-            <button className="bg-[#6675FF] text-white p-2 rounded-lg" type="submit">Create Session</button>
+            <button onClick={toggleDialogue} className="bg-[#6675FF] text-white p-2 rounded-lg hover:scale-105 transition" type="submit">Create Session</button>
+
           </form>
           <div onClick={toggleDialogue} className={createSessionDialogue ? "bg-black h-screen fixed inset-0 opacity-70" : 'hidden'}/>
-
+         
+            
+       
           
+
+          {/* =====Success Message ====== */}
+            {isSuccess && (
+              <Success message={message}/>
+            )}
+          
+          {/* Term! */}
          <div className="bg-white w-fit mx-auto rounded-lg border py-2">
           <h2 className="font-medium text-center text-lg">Terms</h2>
         <div className=" p-2 w-screen justify-center lg:w-fit mx-auto lg:px-5 text-sm flex gap-7 items-center ">
@@ -572,6 +603,10 @@ const LessonPlans = () => {
              <button onClick={() => handlePdfViewer(plan.fileUrl)} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">
                   View
                 </button>
+
+                {isVisible && (
+                  <PdfViewer fileUrl={plan.fileUrl}/>
+                )}
              
                <FaTrash onClick={deleteSelectedLessonPlans} className="cursor-pointer" color="#6675FF" size={20}/>
             </div>
@@ -596,16 +631,14 @@ const LessonPlans = () => {
             </div>
             
           ))}
-       
-          
-        
         </div>
        
+       {/* Delete Session Dialogue*/}
         </div>
         <div onClick={toggleConfirmation} className={isConfirm ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
       </div>
-      <div className={isConfirm ? "border z-50 inset-0 fixed h-fit mx-auto top-[18rem] bg-white shadow-xl w-fit p-4 rounded-xl" : 'hidden'}>
 
+      <div className={isConfirm ? "border z-50 inset-0 fixed h-fit mx-auto top-[18rem] bg-white shadow-xl w-fit p-4 rounded-xl" : 'hidden'}>
               <h2>Are You sure you want to delete this Session?</h2>
               <span className="flex justify-end gap-10 mt-10">
                 <button onClick={toggleConfirmation} className="border px-5 py-1 rounded-lg hover:bg-black hover:text-white transition duration-500">No</button>
@@ -613,7 +646,7 @@ const LessonPlans = () => {
               </span>
               </div> 
 
-
+                  {/* Delete Term Dialogue */}
               <div onClick={toggleTermDelete} className={isDelete ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
               
               <div className={isDelete ? "border z-50 inset-0 fixed h-fit mx-auto top-[18rem] bg-white shadow-xl w-fit p-4 rounded-xl" : 'hidden'}>
@@ -623,6 +656,14 @@ const LessonPlans = () => {
                 <button onClick={deleteTerm} className="border px-5 py-1 rounded-lg hover:bg-black hover:text-white transition duration-500">Yes</button>
               </span>
               </div> 
+
+              <div>
+              {isLoading ? (
+                 <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
+            <ThreeDots visible={true} height="80" width="80" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}}wrapperClass=""/>
+            </div>     
+            ) : (console.log('Not Loading'))}
+              </div>
     </>
   );
 }

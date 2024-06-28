@@ -9,13 +9,16 @@ const SignUp = () => {
         const {form, isLoading, isSuccess, handleChange, handleSubmit} = useContext(GeneralContext)
 
         const navigate  = useNavigate();
-        useEffect(() => {
-            if(isSuccess) {
-                navigate('/userDashboard')
-            } else {
-                alert('Error Navigating')
-            }
-        })
+
+        const redirectFunction = () => {
+            useEffect(() => {
+                if(isSuccess) {
+                    navigate('/userDashboard')
+                } else {
+                    alert('Error Navigating')
+                }
+            })
+        }
     return (
         <>
         <div className='shadow-xl  rounded-xl py-3 border'>
@@ -35,6 +38,7 @@ const SignUp = () => {
                             className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
                             type="text"
                             placeholder='Please Enter Your First Name'
+                            required
                         />
                     </fieldset>
                     <fieldset>
@@ -45,6 +49,7 @@ const SignUp = () => {
                             className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
                             type="text"
                             placeholder='Please enter your last name'
+                            required
                         />
                     </fieldset>
                     <fieldset>
@@ -55,6 +60,7 @@ const SignUp = () => {
                             className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
                             type="email"
                             placeholder='Please enter your email'
+                            required
                         />
                     </fieldset>
                     <fieldset>
@@ -65,6 +71,7 @@ const SignUp = () => {
                             className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
                             type="password"
                             placeholder='Please enter your password'
+                            required
                         />
                     </fieldset>
                     <fieldset>
@@ -76,9 +83,10 @@ const SignUp = () => {
                             type="text"
                             placeholder='Please enter an ID'
                             maxLength={4}
+                            required
                         />
                     </fieldset>
-                    <button type='submit' className='border p-2 w-32 mx-auto rounded-lg text-white bg-black'>Sign Up</button>
+                    <button onClick={redirectFunction} type='submit' className='border p-2 w-32 mx-auto rounded-lg text-white bg-black'>Sign Up</button>
                 </form>
             </div>
             <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] hidden w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
@@ -91,7 +99,7 @@ const SignUp = () => {
 
             <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
 
-        <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
+        <div  className={isSuccess ? 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto' : 'hidden'}>
         <FaCheckCircle size={80} color='green'/>
         <h2 className='font-medium'>Sign Up SuccessFul!</h2>
             </div>

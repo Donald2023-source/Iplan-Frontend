@@ -94,8 +94,6 @@ const LoginUser = () => {
               />
             </fieldset>
 
-            
-
             <button  type='submit' className='border p-2 w-32 mx-auto rounded-lg text-white bg-black'>
               {isLoading ? 'Logging in...' : 'Login'}
             </button>
@@ -116,10 +114,13 @@ const LoginUser = () => {
       </div>
       <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
 
-    <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
+    {isSuccess && (
+        <div  className= 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'>
     <FaCheckCircle size={80} color='green'/>
     <h2 className='font-medium'>Login SuccessFul!</h2>
     </div>
+    )}
+  
 
       {isLoading && (
         <div style={{ height: '100vh', width: '100vw', backgroundColor: 'black', opacity: '0.92', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

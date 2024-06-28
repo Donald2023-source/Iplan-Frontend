@@ -30,7 +30,11 @@ const LandingPage = () => {
     />
   </h4>
             <p className='py-3 lg:text-lg text-sm text-center'>A suitable Platform to help to submit and keep record of your educational schedule for each session</p>
-            <button className='flex lg:mx-auto shadow-xl w-fit bg-black rounded-lg text-white p-3 hover:scale-100'><Link to={'/signUp'}>Get Started</Link></button>
+            <button className='flex lg:mx-auto shadow-xl w-fit bg-black rounded-lg text-white p-3 hover:scale-100'>
+              <Link to={'/signUp'}>
+              Get Started
+              </Link>
+              </button>
         </div>
     </div>
     </>

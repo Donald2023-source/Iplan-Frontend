@@ -30,7 +30,7 @@ const UserDashboard = () => {
   };
   const {
     selectedSession, selectedSessionId, selectedTermId,selectedClassId, classId, selectedTerm, setSelectedSession,setSelectedTerm, setSelectedTermId, classes,sessions, terms, subjects, setClasses, setSessions, setTerms, setSelectedClassId, setSubjects, setClassId, setSelectedSessionId, fetchSessions, handleSessionChange,
-    handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect,classItems
+    handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect,classItems, isLoading, setIsLoading
   } = useContext(GeneralContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -136,6 +136,7 @@ const UserDashboard = () => {
 
   const handleFileUpload = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
     if (!title) {
       setErrorMessage('Title is required');
       return;
@@ -160,6 +161,7 @@ const UserDashboard = () => {
         console.log('File uploaded successfully', data);
         setTitle('');
         setSelectedFile(null);
+        setIsLoading(false)
         setErrorMessage('');
         setUploadSuccess(true)
         setMessage('')
@@ -357,6 +359,11 @@ const UserDashboard = () => {
         </div>
         <button className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">View </button>
     </div>
+    {isLoading ? (
+                 <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
+            <ThreeDots visible={true} height="80" width="80" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}}wrapperClass=""/>
+            </div>     
+            ) : (console.log('Not Loading'))}
     </div>
   );
 };
