@@ -85,8 +85,9 @@ export const GeneralProvider = ({ children }) => {
   const [selectedClassId, setSelectedClassId] = useState('');
   const [subjects, setSubjects] = useState([]);
   const [myId, setMyId] = useState(getMyIdFromLocalStorage);
-  const [isSelected, setIsSelected] =useState(false)
-  
+  const [isSelected, setIsSelected] =useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [Error, setError] = useState('');
   const [terms, setTerms] = useState([]);
   const [classes, setClasses] = useState([]);
 
@@ -234,10 +235,16 @@ export const GeneralProvider = ({ children }) => {
   const fetchSessions = async () => {
     try {
       const response = await fetch('http://localhost:3000/sessions');
+      if (!response.ok) {
+        setIsFailed(true);
+        throw new Error('Failed to fetch sessions');
+      }
       const data = await response.json();
-      setSessions(data);
+      setSessions(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Error fetching sessions', error.message);
+      console.error('Error fetching sessions:', error.message);
+      
+      setSessions([]);
     }
   };
 
@@ -297,9 +304,6 @@ export const GeneralProvider = ({ children }) => {
     }
   };
 
-
-  
-
   const handleClassSelect = (e) => {
     const id = e.target.value;
     const selectedClass = classes.find(classItem => classItem.id === parseInt(id));
@@ -328,9 +332,13 @@ export const GeneralProvider = ({ children }) => {
   return (
     <GeneralContext.Provider
       value={{
+        Error,
+        setError,
         form,
         isLoading,
         isSuccess,
+        isFailed,
+        setIsFailed,
         setIsLoading,
         setIsSuccess,
         handleChange,

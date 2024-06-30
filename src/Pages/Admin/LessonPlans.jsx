@@ -9,6 +9,8 @@ import { FaTelegram } from "react-icons/fa";
 import PdfViewer from "./Viewer/lessonPlanViewer";
 import Success from "../../Components/success";
 import { ThreeDots } from "react-loader-spinner";
+import Error from "../../Components/ErrorComponent";
+import ErrorComponent from "../../Components/ErrorComponent";
 
 const LessonPlans = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -20,41 +22,8 @@ const LessonPlans = () => {
     }
   }
 
-
-  const {
-    selectedSession,
-    selectedSessionId,
-    selectedTermId,
-    selectedClassId,
-    classId,
-    selectedTerm,
-    setSelectedSession,
-    setSelectedTerm,
-    setSelectedTermId,
-    classes,
-    sessions,
-    terms,
-    subjects,
-    setClasses,
-    setSessions,
-    setTerms,
-    setSelectedClassId,
-    setSubjects,
-    setClassId,
-    setSelectedSessionId,
-    fetchSessions,
-    handleSessionChange,
-    handleTermChange,
-    fetchTerms,
-    fetchSubjects,
-    fetchClasses,
-    handleClassSelect,
-    classItems,
-    myId,
-    setIsSuccess,
-    isSuccess,
-    isLoading,
-    setIsLoading
+  const { selectedSession, selectedSessionId, selectedTermId, selectedClassId, classId, selectedTerm, setSelectedSession, setSelectedTerm, setSelectedTermId, classes, sessions,terms, setSelectedSessionId, fetchSessions, handleSessionChange, handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect, classItems, myId, setIsSuccess, isSuccess, isLoading, setIsLoading, isFailed, setIsFailed, Error,
+    setError
   } = useContext(GeneralContext);
 
   const [newTerm, setNewTerm] = useState({ name: '', startDate: '', endDate: '' });
@@ -81,7 +50,8 @@ const LessonPlans = () => {
   const [currentFileUrl, setCurrentFileUrl] = useState(null);
   const [selectedLessonPlanIds, setSelectedLessonPlanIds] = useState([]);
   const [comments, setComments] = useState({});
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+
 
   const toggleConfirmation = () => {
     setIsConfirm(!isConfirm)
@@ -188,6 +158,7 @@ const LessonPlans = () => {
         throw new Error('Failed to create session');
       }
       const responseData = await response.json();
+     
       console.log('Session created successfully:', responseData);
       setIsSuccess(true);
       setIsLoading(false)
@@ -195,6 +166,9 @@ const LessonPlans = () => {
       fetchSessions();
     } catch (error) {
       console.error('Error creating new session:', error.message);
+      setIsLoading(false)
+      setError(error.message)
+      setIsFailed(true)
     }
   };
 
@@ -216,10 +190,10 @@ const LessonPlans = () => {
       
     } catch (error) {
       console.error('Error deleting session', error.message);
+      setError(error.message)
     }
   };
-
-  
+ 
   const deleteSelectedLessonPlans = async () => {
     setIsLoading(true)
     try {
@@ -240,10 +214,9 @@ const LessonPlans = () => {
     }
   };
   
-
   const createNewTerm = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms`, {
         method: 'POST',
@@ -252,14 +225,19 @@ const LessonPlans = () => {
         },
         body: JSON.stringify(newTerm)
       });
-      if (response.ok) {
-        const responseData = await response.json();
-        setIsLoading(false)
-        console.log('Term Created Successfully', responseData);
-        fetchTerms(selectedSessionId);
-      }
+      if (!response.ok) {
+        throw new Error('Failed to create Term');
+      };
+      const responseData = await response.json();
+      setIsLoading(false);
+      console.log('Term Created Successfully', responseData);
+      fetchTerms(selectedSessionId);
+
     } catch (error) {
       console.error('Error creating term', error.message);
+      setIsLoading(false);
+      setError(error.message);
+      setIsFailed(true)
     }
   };
 
@@ -279,6 +257,7 @@ const LessonPlans = () => {
       createSessionDialogue();
     } catch (error) {
       console.error('Error deleting term', error.message);
+      setIsFailed(true)
     }
   };
 
@@ -360,32 +339,21 @@ const LessonPlans = () => {
 
   return (
     <>
-    {/* <FaBars onClick={toggleAside} color="gray" size={20}/> */}
-      <div className="flex">
-        
-       <div className="bg-[#F2F5E5] relative w-screen h-screen">
-          <div className="relative">
-          <div>
-            <div>
-             
-            </div>
-            
-            <div className=''>
-             <div className="flex justify-between items-center py-3 bg-white rounded-xl px-8 my-3 mx-2">
-             <h2 className="font-bold mx-auto">04:10:00</h2>
-{/*           
-              <Link to={"/adminDashboard"}>
-              <FaHome  className="cursor-pointer hover:translate-y-2 transition duration-300"  color="#252b63" size={20}/>
-              </Link> */}
-              </div>
-            </div>
-          </div>
-          <div className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
+    <div className="flex">
+        <div className="bg-[#F2F5E5] relative w-screen h-screen">
+              <div className="relative">
+          <div className="flex justify-between items-center py-3 bg-white rounded-xl px-8 my-3 mx-2">
+         <h2 className="font-bold mx-auto">04:10:00</h2>     
+     </div>
+
+
+          <section className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
             <h2 className="text-center text-3xl">Welcome <span className="font-medium">Afodia!</span></h2>
             <h2 className="text-center py-4">Lets view the lesson plans available</h2>
-          </div>
+          </section>
           
           <div className="flex items-center lg:flex-row  flex-col gap-2">
+
           <div className="border mx-auto p-2 w-screen lg:w-fit lg:px-5 text-sm flex flex-col items-center bg-white rounded-lg">
             
             <h2 className="font-medium text-center text-lg">Sessions</h2>
@@ -411,9 +379,8 @@ const LessonPlans = () => {
             </div>
           </div>
           
-          {/* <h2 className="bg-red-900 p-2 w-32 rounded cursor-pointer" onClick={deleteSession}>Del</h2> */}
          
-              <form className={createSessionDialogue ? "flex flex-col justify-center mx-auto z-50 m-auto p-10 bg-white h-fit shadow-lg rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'} onSubmit={createSession}>
+           <form className={createSessionDialogue ? "flex flex-col justify-center mx-auto z-50 m-auto p-10 bg-white h-fit shadow-lg rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'} onSubmit={createSession}>
               <span className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-center text-[#002E]">Create Session</h2>
               <FaTimes onClick={toggleDialogue} className="cursor-pointer" color="black" size={25}/>
@@ -460,18 +427,18 @@ const LessonPlans = () => {
             <button onClick={toggleDialogue} className="bg-[#6675FF] text-white p-2 rounded-lg hover:scale-105 transition" type="submit">Create Session</button>
 
           </form>
-          <div onClick={toggleDialogue} className={createSessionDialogue ? "bg-black h-screen fixed inset-0 opacity-70" : 'hidden'}/>
-         
-            
-       
-          
 
-          {/* =====Success Message ====== */}
+          <div onClick={toggleDialogue} className={createSessionDialogue ? "bg-black h-screen fixed inset-0 opacity-70" : 'hidden'}/>  
+
+          {/* =====Messages====== */}
             {isSuccess && (
               <Success message={message}/>
             )}
           
-          {/* Term! */}
+          {isFailed && (
+            <ErrorComponent Error={Error}/>
+          )}
+          {/* ===== Term! ======= */}
          <div className="bg-white w-fit mx-auto rounded-lg border py-2">
           <h2 className="font-medium text-center text-lg">Terms</h2>
         <div className=" p-2 w-screen justify-center lg:w-fit mx-auto lg:px-5 text-sm flex gap-7 items-center ">
@@ -491,12 +458,15 @@ const LessonPlans = () => {
             <h2 className={isTermList ? "text-center py-2 relative top-0" : 'hidden'} key={term._id}>{term.name}</h2>
           ))}
           </div>
-              
-          {/* <h2 className="bg-red-900 p-2 w-32 rounded cursor-pointer" onClick={deleteTerm}>Del Term</h2> */}
 
+            {/* =======Create Term ======== */}
           <div>
-            <form className={createTermDialogue ? "flex flex-col justify-center z-50 m-auto p-10 bg-white h-fit shadow-lg rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'}  onSubmit={createNewTerm}>
+            <form className={createTermDialogue ? "flex flex-col justify-center z-50 m-auto p-10 bg-white h-fit shadow-lg w-fit px-16 rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'}  onSubmit={createNewTerm}>
+              <span className="flex justify-around items-center">
               <h2 className="text-2xl font-bold text-center text-[#002E]">Create Term</h2>
+              <FaTimes onClick={toggleCreateTermDialogue} className="
+              cursor-pointer " size={15} color="black"/>
+              </span>
               <fieldset>
                 <input
                   type="text"
@@ -529,13 +499,16 @@ const LessonPlans = () => {
                   className="p-2 rounded-md border w-[20rem] lg:w-[25rem]"
                 />
               </fieldset>
-              <button className="bg-[#6675FF] text-white p-2 rounded-lg" type="submit">Create New Term</button>
+              <button onClick={toggleCreateTermDialogue} className="bg-[#6675FF] text-white p-2 rounded-lg" type="submit">Create New Term</button>
             </form>
           </div>
+
           <div onClick={toggleCreateTermDialogue} className={createTermDialogue ? "bg-black h-screen fixed inset-0 opacity-70" : 'hidden'}/>
 
-            <div className="bg-white flex items-center p-4 lg:w-[24rem] rounded-lg mx-auto">
-              <h2 className="font-medium py-2 text-center">Please Select A Class</h2>
+
+            {/*======= Class Select======= */}
+          <div className="bg-white flex items-center p-4 lg:w-[24rem] rounded-lg mx-auto">
+          <h2 className="font-medium py-2 text-center">Please Select A Class</h2>
           <select className="rounded-xl p-2 focus:outline-none cursor-pointer w-60 border"  onChange={handleClassSelect} value={selectedClassId}>
             <option value="">Select Class</option>
             {classItems}
@@ -543,36 +516,28 @@ const LessonPlans = () => {
           </div>
           </div>
 
+            {/* ========Lesson plans======= */}
           <h1 className="font-medium text-lg text-center py-3">View Lesson Plans</h1>
-          {/* <ul className="flex justify-between px-10">
-            <li>Check</li>
-            <li>Title</li>
-            <li>Subject</li>
-            <li>Class</li>
-            <li>Comment</li>
-            <li>Delete</li>
-          </ul> */}
-
-
           {lessonPlans.map(plan => (
             <div className="flex flex-col bg-white items-start" key={plan._id}>
               <span className="lg:hidden flex justify-center">
               <h2 className="text-center w-screen py-2 font-medium">Subject: {plan.subjectName}</h2>
               <button>View</button>
               </span>
+
+
+              {/* ========Comment====== */}
               <div className="flex items-center justify-between mx-auto w-[95%]">
-            
                 <input
                   type="checkbox"
                   checked={selectedLessonPlanIds.includes(plan._id)}
                   onChange={e => handleLessonPlanCheckboxChange(e, plan._id)}
                 />
                 <h2 className="lg:text-md hidden">{plan.title}</h2>
-                <h2 className="lg:block hidden">{plan.subjectName}</h2>
-              
-                      
+                <h2 className="lg:block hidden">{plan.subjectName}</h2>          
              
              <fieldset  className="shadow-lg hidden lg:flex items-center lg:text-md text-sm md:text-md justify-around rounded-lg bg-white  w-64">
+              
                 <input
                 type="text"
                   placeholder="Add a comment"
@@ -632,7 +597,8 @@ const LessonPlans = () => {
             
           ))}
         </div>
-       
+
+
        {/* Delete Session Dialogue*/}
         </div>
         <div onClick={toggleConfirmation} className={isConfirm ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
