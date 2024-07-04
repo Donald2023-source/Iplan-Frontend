@@ -26,7 +26,7 @@ const LoginAdmin = () => {
        
     <form className='flex flex-col gap-12 justify-center  lg:px-10' onSubmit={handleAdminloginSubmit}>
             <fieldset  className='flex flex-col gap-1'>
-            <label className='font-bold ml-2'>Email</label>
+            <label className='font-normal ml-2'>Email</label>
               <input
                 name="email"
                 value={AdminLoginForm.email}
@@ -39,7 +39,7 @@ const LoginAdmin = () => {
             </fieldset>
 
             <fieldset  className='flex flex-col gap-1'>
-            <label className='font-bold ml-2'>Password</label>
+            <label className='font-normal ml-2'>Password</label>
               <input
                 name="password"
                 value={AdminLoginForm.password}
@@ -53,7 +53,7 @@ const LoginAdmin = () => {
 
             
             <fieldset  className='flex flex-col gap-1'>
-            <label className='font-bold ml-2'>Admin Key</label>
+            <label className='font-normal ml-2'>Admin Key</label>
               <input
                 name="adminKey"
                 value={AdminLoginChange.adminKey}
@@ -86,13 +86,12 @@ const LoginAdmin = () => {
               <h4 className='text-center'>Admin?</h4>
             </Link>
           </div>
-
         <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
-
-        <div className='hidden lg:block md:block'>
-          <img className='rounded-l-2xl h-[50rem]' src={page} alt="Login" />
           </div>
 
+          
+        <div className='hidden lg:block md:block'>
+          <img className='rounded-l-2xl h-[45rem]' src={page} alt="Login" />
           </div>
 </div>
         {isSuccess && (

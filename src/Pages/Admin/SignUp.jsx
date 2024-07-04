@@ -22,11 +22,11 @@ const SignUp = () => {
         <>
           <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
       <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
-        <div className='flex flex-col w-screen px-4 lg:w-[60%]'>
-                <form onSubmit={handleAdminSubmit} className='flex flex-col gap-2'>
-                    <h3 className='text-2xl py-3 font-bold mx-auto'>SIGN UP</h3>
-                    <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>First Name</label>
+        <div className='flex flex-col w-screen px-4 lg:w-[50%]'>
+                <form onSubmit={handleAdminSubmit} className='flex flex-col gap-3'>
+                    <h3 className='text-2xl py-2 font-bold mx-auto'>SIGN UP</h3>
+                    <fieldset className='flex flex-col gap-3'>
+                    <label className='font-normal'>First Name</label>
                         <input
                             name="firstName"
                             value={AdminForm.firstName}
@@ -38,7 +38,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>Last Name</label>
+                    <label className='font-normal'>Last Name</label>
                         <input
                             name="lastName"
                             value={AdminForm.lastName}
@@ -50,7 +50,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>Email</label>
+                    <label className='font-normal'>Email</label>
                         <input
                             name="email"
                             value={AdminForm.email}
@@ -62,7 +62,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>Password</label>
+                    <label className='font-normal'>Password</label>
                         <input
                             name="password"
                             value={AdminForm.password}
@@ -73,7 +73,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>Staff Id</label>
+                    <label className='font-normal'>Staff Id</label>
                         <input
                             name="staffId"
                             value={AdminForm.staffId}
@@ -85,7 +85,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>Admin Key</label>
+                    <label className='font-normal'>Admin Key</label>
                         <input
                             name="adminKey"
                             value={AdminForm.adminKey}
@@ -106,8 +106,8 @@ const SignUp = () => {
             </button>
                 </form>
 
-                <div className='flex flex-col items-center gap-4 mt-4'>
-            <span className='flex justify-center py-4 gap-5'>
+                <div className='flex flex-col items-center gap-2 mt-2'>
+            <span className='flex justify-center py-2 gap-3'>
               <h4>Already have an Account?</h4>
               <Link to={'/adminLogin'}>
                 <h4 className='text-[#252b63] font-bold'>Login</h4>

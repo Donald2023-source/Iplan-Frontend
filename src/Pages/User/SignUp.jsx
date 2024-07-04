@@ -28,7 +28,7 @@ const SignUp = () => {
             <h2 className='text-3xl font-medium text-center lg:mb-4'>Sign Up</h2>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-medium'>First Name</label>
+                    <label className='font-normal'>First Name</label>
                         <input
                             name="firstName"
                             value={form.firstName}
@@ -40,7 +40,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-medium'>Last Name</label>
+                        <label className='font-normal'>Last Name</label>
                         <input
                             name="lastName"
                             value={form.lastName}
@@ -52,7 +52,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-medium'>Email</label>
+                        <label className='font-normal'>Email</label>
                         <input
                             name="email"
                             value={form.email}
@@ -64,7 +64,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-medium' >Password</label>
+                        <label className='font-normal' >Password</label>
                         <input
                             name="password"
                             value={form.password}
@@ -76,7 +76,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-medium'>Staff Id</label>
+                        <label className='font-normal'>Staff Id</label>
                         <input
                             name="staffId"
                             value={form.staffId}
