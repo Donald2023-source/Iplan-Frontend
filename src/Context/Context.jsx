@@ -90,6 +90,7 @@ export const GeneralProvider = ({ children }) => {
   const [Error, setError] = useState('');
   const [terms, setTerms] = useState([]);
   const [classes, setClasses] = useState([]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -163,6 +164,7 @@ export const GeneralProvider = ({ children }) => {
       if (response.ok) {
         console.log('User created successfully:', data);
         setIsSuccess(true);
+        localStorage.setItem('firstName', data.firstName); // Store firstName
       } else {
         console.error('Error creating user:', data.message);
       }
@@ -208,6 +210,7 @@ export const GeneralProvider = ({ children }) => {
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
+        localStorage.setItem('firstName', data.user.firstName); // Store firstName
       } else {
         console.error('Error logging in user:', data.message);
         setIsLoading(false);
@@ -217,6 +220,7 @@ export const GeneralProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+
   // const uploadLessonPlan = async (formData) => {
   //   try {
   //     const response = await fetch('http://localhost:3000/api/lesson-plans/upload', {

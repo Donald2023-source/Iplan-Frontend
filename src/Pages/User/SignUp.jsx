@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import signup from '../../assets/landing-3.jpg';
+import page from '../../assets/Page.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { GeneralContext } from '../../Context/Context';
 import { ThreeDots } from 'react-loader-spinner';
@@ -21,81 +21,101 @@ const SignUp = () => {
         }
     return (
         <>
-        <div className='shadow-xl  rounded-xl py-3 border'>
+       <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
+      <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
+        <div className='flex flex-col w-screen px-4 lg:w-[60%]'>
+            <form className='flex flex-col gap-4 justify-center lg:px-10' onSubmit={handleSubmit} >
+            <h2 className='text-3xl font-medium text-center lg:mb-4'>Sign Up</h2>
 
-        
-            <div className='flex lg:flex-row flex-col lg:w-[75rem] lg:mt-10  md:flex-row mx-auto justify-center gap-10 items-center'>
-                <div>
-                    <img className='h-[43rem] lg:block hidden mt-3 rounded-lg' src={signup} alt="SignUp page" />
-                </div>
-                <form onSubmit={handleSubmit} className='flex flex-col gap-10'>
-                    <h3 className='text-2xl font-bold mx-auto'>SIGN UP</h3>
-                    <fieldset>
+                    <fieldset className='flex flex-col gap-1'>
+                    <label className='font-medium'>First Name</label>
                         <input
                             name="firstName"
                             value={form.firstName}
                             onChange={handleChange}
-                            className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
+                            className='border-gray-200 border p-3 rounded-xl'
                             type="text"
                             placeholder='Please Enter Your First Name'
                             required
                         />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className='flex flex-col gap-1'>
+                        <label className='font-medium'>Last Name</label>
                         <input
                             name="lastName"
                             value={form.lastName}
                             onChange={handleChange}
-                            className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
+                            className='border-gray-200 border p-3 rounded-xl'
                             type="text"
                             placeholder='Please enter your last name'
                             required
                         />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className='flex flex-col gap-1'>
+                        <label className='font-medium'>Email</label>
                         <input
                             name="email"
                             value={form.email}
                             onChange={handleChange}
-                            className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
+                            className='border-gray-200 border p-3 rounded-xl'
                             type="email"
                             placeholder='Please enter your email'
                             required
                         />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className='flex flex-col gap-1'>
+                        <label className='font-medium' >Password</label>
                         <input
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
                             type="password"
+                            className='border-gray-200 border p-3 rounded-xl'
                             placeholder='Please enter your password'
                             required
                         />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className='flex flex-col gap-1'>
+                        <label className='font-medium'>Staff Id</label>
                         <input
                             name="staffId"
                             value={form.staffId}
                             onChange={handleChange}
-                            className='p-4 w-[23rem] md:w-[20rem] lg:w-[30rem] rounded-lg border border-gray-400'
+                           className='border-gray-200 border p-3 rounded-xl'
                             type="text"
                             placeholder='Please enter an ID'
                             maxLength={4}
                             required
                         />
                     </fieldset>
-                    <button onClick={redirectFunction} type='submit' className='border p-2 w-32 mx-auto rounded-lg text-white bg-black'>Sign Up</button>
+                    
+            <button 
+            onClick={redirectFunction}
+              className='border mx-auto p-2 w-full lg:w-96 bg-[#252b63] text-white rounded-xl'
+              type='submit'
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
+            </button>
+         
                 </form>
-            </div>
-            <div className='bg-black h-[43rem] lg:flex md:flex rounded-lg left-[18%] hidden w-[28.8rem] opacity-70 absolute top-[3.3rem]' />
-            <div className='lg:block flex justify-around py-6 w-screen lg:relative lg:top-0 absolute top-16'>
-                <h2 className='text-orange-500 font-bold lg:absolute lg:text-2xl left-[29.8%] top-[43%] lg:top-[43%]'><Link to={'/signup'}>Sign Up</Link></h2>
-                <h2 className='lg:text-white lg:absolute lg:text-2xl left-[30.8%] top-[43%] lg:top-[53%]'><Link to={'/userlogin'}>Login</Link></h2>
-                <h2 className='lg:text-white lg:absolute lg:text-xl left-[30.8%] cursor-pointer underline top-[43%] lg:top-[80%]'><Link to={'/adminsignup'}>Admin?</Link></h2>
-            </div>
-            </div>
+
+                <div className='flex flex-col items-center gap-4 mt-4'>
+            <span className='flex justify-center py-4 gap-5'>
+              <h4>Already have an Account?</h4>
+              <Link to={'/userLogin'}>
+                <h4 className='text-[#252b63] font-bold'>Login</h4>
+              </Link>
+            </span>
+            <Link to={'/adminSignup'}>
+              <h4 className='text-center'>Admin?</h4>
+            </Link>
+          </div>
+</div>
+<div className='hidden lg:block md:block'>
+          <img className='rounded-l-2xl h-[40rem]' src={page} alt="Login" />
+        </div>
+</div>
+</div>
 
             <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
 

@@ -1,17 +1,13 @@
-import { Document, Page, pdfjs } from "react-pdf";
-import { version } from "pdfjs-dist";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
 
-// Manually set the worker path to the latest version available on the CDN
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/${version}/pdf.worker.min.js`;
+import '@react-pdf-viewer/core/lib/styles/index.css';
 
-const PdfViewer = ({ fileUrl }) => {
-  return (
-    <>
-      <Document file={fileUrl}>
-        <Page pageNumber={1} />
-      </Document>
-    </>
-  );
-}
+const MyPdfViewer = ({fileUrl}) => {
+  return <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
+   <div className='border w-screen h-fit mx-auto'>
+    <Viewer fileUrl={fileUrl} />
+  </div>
 
-export default PdfViewer;
+  </Worker>;
+};
+export default MyPdfViewer  

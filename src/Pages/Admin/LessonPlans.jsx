@@ -11,6 +11,7 @@ import Success from "../../Components/success";
 import { ThreeDots } from "react-loader-spinner";
 import Error from "../../Components/ErrorComponent";
 import ErrorComponent from "../../Components/ErrorComponent";
+import MyPdfViewer from "./Viewer/lessonPlanViewer";
 
 const LessonPlans = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -255,6 +256,7 @@ const LessonPlans = () => {
       setSelectedTerm('');
       toggleTermDelete();
       createSessionDialogue();
+      setIsSuccess(true)
     } catch (error) {
       console.error('Error deleting term', error.message);
       setIsFailed(true)
@@ -565,12 +567,12 @@ const LessonPlans = () => {
                 </div>
                
               ))} */}
-             <button onClick={() => handlePdfViewer(plan.fileUrl)} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">
+             <button onClick={handlePdfViewer} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">
                   View
                 </button>
 
                 {isVisible && (
-                  <PdfViewer fileUrl={plan.fileUrl}/>
+                 <MyPdfViewer fileUrl={plan.fileUrl}/>
                 )}
              
                <FaTrash onClick={deleteSelectedLessonPlans} className="cursor-pointer" color="#6675FF" size={20}/>
@@ -592,7 +594,10 @@ const LessonPlans = () => {
                 </fieldset>
                 <FaTelegram className="cursor-pointer mt-5"  onClick={() => submitComment(plan._id)}  color="#6675FF" size={50}/>
                 </div>
-                <PdfViewer fileUrl = {plan.fileUrl}/>
+                <div className={isViewerVisible ? 'flex' : 'hidden'}>
+                   <PdfViewer fileUrl = {plan.fileUrl}/>
+                </div>
+               
             </div>
             
           ))}

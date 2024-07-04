@@ -42,7 +42,8 @@ const UserDashboard = () => {
   const [comments, setComments] = useState([]);
   const [isUploadDialogue, setIsUploadDialogue] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+  const [firstName, setFirstName] = useState('')
   
 
   const handleTitleChange = (e) => {
@@ -56,6 +57,14 @@ const UserDashboard = () => {
   useEffect(() => {
     fetchSessions();
     fetchClasses();
+  }, []);
+
+
+  useEffect(() => {
+    const storedFirstName = localStorage.getItem('firstName');
+    if (storedFirstName) {
+      setFirstName(storedFirstName);
+    }
   }, []);
 
   useEffect(() => {
@@ -229,7 +238,7 @@ const UserDashboard = () => {
                      </div>
                 </div>
               <div className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
-          <h2 className="text-center text-3xl">Welcome <span className="font-medium">Sandra!</span></h2>
+          <h2 className="text-center text-3xl">Welcome <span className="font-medium">{firstName}!</span></h2>
         <h2 className="text-center py-4">Welcome to Iplan</h2>
     </div>
  </div>
