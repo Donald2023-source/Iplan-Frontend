@@ -13,6 +13,7 @@ import Error from "../../Components/ErrorComponent";
 import ErrorComponent from "../../Components/ErrorComponent";
 import MyPdfViewer from "./Viewer/lessonPlanViewer";
 
+
 const LessonPlans = () => {
   const getSubjectIdFromLocalStorage = () => {
     try {
@@ -23,8 +24,8 @@ const LessonPlans = () => {
     }
   }
 
-  const { selectedSession, selectedSessionId, selectedTermId, selectedClassId, classId, selectedTerm, setSelectedSession, setSelectedTerm, setSelectedTermId, classes, sessions,terms, setSelectedSessionId, fetchSessions, handleSessionChange, handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect, classItems, myId, setIsSuccess, isSuccess, isLoading, setIsLoading, isFailed, setIsFailed, Error,
-    setError
+  const { selectedSession, selectedSessionId, selectedTermId, selectedClassId, classId, selectedTerm, setSelectedSession, setSelectedTerm, setSelectedTermId, classes, sessions,terms, setSelectedSessionId, fetchSessions, handleSessionChange, handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect, classItems, myId, setIsSuccess, isSuccess, isLoading, setIsLoading, isFailed, setIsFailed, Error, realTime,
+  setError, message, setMessage
   } = useContext(GeneralContext);
 
   const [newTerm, setNewTerm] = useState({ name: '', startDate: '', endDate: '' });
@@ -36,6 +37,13 @@ const LessonPlans = () => {
     startDate: '',
     endDate: ''
   });
+  
+  const [time, setTime] = useState(new Date());
+
+ console.log(time.toTimeString())
+ useEffect(() => {
+  setInterval(() => setTime(new Date()))
+ }, [])
   
 
   const [isVisible, setIsVisible] = useState(false);
@@ -51,8 +59,8 @@ const LessonPlans = () => {
   const [currentFileUrl, setCurrentFileUrl] = useState(null);
   const [selectedLessonPlanIds, setSelectedLessonPlanIds] = useState([]);
   const [comments, setComments] = useState({});
-  const [message, setMessage] = useState('');
-
+  const [AdminFirstName, setAdminFirstName] = useState('')
+  const [isAvailable, setIsAvailable] = useState(false)
 
   const toggleConfirmation = () => {
     setIsConfirm(!isConfirm)
@@ -81,6 +89,12 @@ const LessonPlans = () => {
     setIsViewerVisible(!isViewerVisible);
   };
 
+  useEffect(() => {
+    const storedFirstName = localStorage.getItem('AdminFirstName');
+    if (storedFirstName) {
+      setAdminFirstName(storedFirstName);
+    }
+  }, []);
 
   useEffect(() => {
     fetchSessions();
@@ -339,18 +353,19 @@ const LessonPlans = () => {
     }
   };
 
+
   return (
     <>
     <div className="flex">
         <div className="bg-[#F2F5E5] relative w-screen h-screen">
               <div className="relative">
           <div className="flex justify-between items-center py-3 bg-white rounded-xl px-8 my-3 mx-2">
-         <h2 className="font-bold mx-auto">04:10:00</h2>     
+         <h2 className="font-bold mx-auto">{time.toLocaleTimeString()}</h2>     
      </div>
 
 
           <section className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
-            <h2 className="text-center text-3xl">Welcome <span className="font-medium">Afodia!</span></h2>
+            <h2 className="text-center text-3xl">Welcome <span className="font-medium">{AdminFirstName}!</span></h2>
             <h2 className="text-center py-4">Lets view the lesson plans available</h2>
           </section>
           
@@ -519,6 +534,7 @@ const LessonPlans = () => {
           </div>
 
             {/* ========Lesson plans======= */}
+            
           <h1 className="font-medium text-lg text-center py-3">View Lesson Plans</h1>
           {lessonPlans.map(plan => (
             <div className="flex flex-col bg-white items-start" key={plan._id}>

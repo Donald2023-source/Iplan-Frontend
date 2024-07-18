@@ -7,7 +7,6 @@ const MyPdfViewer = ({fileUrl}) => {
    <div className='border w-screen h-fit mx-auto'>
     <Viewer fileUrl={fileUrl} />
   </div>
-
   </Worker>;
 };
 export default MyPdfViewer  

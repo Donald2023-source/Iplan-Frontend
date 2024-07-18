@@ -7,6 +7,7 @@ import { FaCheck, FaCheckCircle } from 'react-icons/fa';
 
 const SignUp = () => {
     const { AdminForm, isLoading, isSuccess, adminChange, handleAdminSubmit } = useContext(GeneralContext);
+
         const navigate = useNavigate();
 
         const redirectFunction = () => {
@@ -15,14 +16,13 @@ const SignUp = () => {
                 navigate('/lessonPlans');
             }
         }, [isSuccess, navigate]);   
-        }
-        
+        } 
 
     return (
         <>
           <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
       <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
-        <div className='flex flex-col w-screen px-4 lg:w-[50%]'>
+        <div className='flex flex-col w-screen px-4 lg:w-[45%]'>
                 <form onSubmit={handleAdminSubmit} className='flex flex-col gap-3'>
                     <h3 className='text-2xl py-2 font-bold mx-auto'>SIGN UP</h3>
                     <fieldset className='flex flex-col gap-3'>
@@ -34,6 +34,7 @@ const SignUp = () => {
                             type="text"
                             className='border-gray-200 border p-3 rounded-xl'
                             placeholder='Please Enter Your First Name'
+                            required
                         />
                     </fieldset>
 
@@ -46,6 +47,7 @@ const SignUp = () => {
                             type="text"
                             className='border-gray-200 border p-3 rounded-xl'
                             placeholder='Please enter your last name'
+                            required
                         />
                     </fieldset>
 
@@ -58,6 +60,7 @@ const SignUp = () => {
                             className='border-gray-200 border p-3 rounded-xl'
                             type="email"
                             placeholder='Please enter your email'
+                            required
                         />
                     </fieldset>
 
@@ -70,6 +73,7 @@ const SignUp = () => {
                             className='border-gray-200 border p-3 rounded-xl'
                             type="password"
                             placeholder='Please enter your password'
+                            required
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
@@ -82,6 +86,7 @@ const SignUp = () => {
                             type="text"
                             placeholder='Please enter an ID'
                             maxLength={4}
+                            required
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
@@ -93,7 +98,8 @@ const SignUp = () => {
                             className='border-gray-200 border p-3 rounded-xl'
                             type="text"
                             placeholder='Create your Admin key'
-                            maxLength={4}
+                            maxLength={6}
+                            required
                         />
                     </fieldset>
                                  

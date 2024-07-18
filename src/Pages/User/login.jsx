@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import page from '../../assets/Page.jpg';
+import { ThreeDots } from 'react-loader-spinner';
+import { FaCheckCircle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { GeneralContext } from '../../Context/Context';
+import ErrorComponent from '../../Components/ErrorComponent';
+
 
 const LoginUser = () => {
-  const { setUser, isLoading, isSuccess, setIsSuccess, setIsLoading } = useContext(GeneralContext);
+  const { setUser, isLoading, isSuccess, setIsSuccess, setIsLoading, isFailed, setIsFailed, message, setMessage } = useContext(GeneralContext);
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/lessonPlans');
+      navigate('/userDashboard');
     }
   }, [isSuccess, navigate]);
 
@@ -44,16 +50,21 @@ const LoginUser = () => {
         setIsSuccess(true);
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('firstName', data.user.firstName);
         navigate('/userDashboard');
       } else {
         console.error('Error logging in user:', data.message);
         setIsLoading(false);
+        setIsFailed(true)
+        setMessage(data.message)
       }
     } catch (error) {
       console.error('An error occurred:', error.message);
       setIsLoading(false);
+      setIsFailed(true)
     }
   };
+
 
   return (
     <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
@@ -62,7 +73,7 @@ const LoginUser = () => {
           <h2 className='text-3xl font-medium text-center mb-4'>Welcome Back!</h2>
           <form className='flex flex-col gap-12 justify-center  lg:px-10' onSubmit={handleSubmit}>
             <fieldset className='flex flex-col gap-1'>
-              <label className='font-bold ml-2'>Email</label>
+              <label className='font-normal ml-2'>Email</label>
               <input
                 name="email"
                 value={form.email}
@@ -75,7 +86,7 @@ const LoginUser = () => {
             </fieldset>
 
             <fieldset className='flex flex-col gap-1'>
-              <label className='font-bold ml-2'>Password</label>
+              <label className='font-normal ml-2'>Password</label>
               <input
                 name="password"
                 value={form.password}
@@ -102,7 +113,7 @@ const LoginUser = () => {
                 <h4 className='text-[#252b63] font-bold'>Sign Up</h4>
               </Link>
             </span>
-            <Link to={'/adminSignup'}>
+            <Link to={'/adminsignup'}>
               <h4 className='text-center'>Admin?</h4>
             </Link>
           </div>
@@ -112,6 +123,21 @@ const LoginUser = () => {
           <img className='rounded-l-2xl h-[40rem]' src={page} alt="Login" />
         </div>
       </div>
+
+      <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
+
+<div  className={isSuccess ? 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto' : 'hidden'}>
+<FaCheckCircle size={80} color='green'/>
+<h2 className='font-medium'>Sign Up SuccessFul!</h2>
+    </div>
+
+    {isFailed && (<ErrorComponent Error={message} />)}
+   
+    {isLoading ? (
+         <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
+    <ThreeDots visible={true} height="80" width="80" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}}wrapperClass=""/>
+    </div>     
+    ) : (console.log('Not Loading'))}
     </div>
   );
 };

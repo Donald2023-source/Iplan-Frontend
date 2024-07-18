@@ -4,9 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GeneralContext } from '../../Context/Context';
 import { ThreeDots } from 'react-loader-spinner';
 import { FaCheckCircle } from 'react-icons/fa';
+import ErrorComponent from '../../Components/ErrorComponent';
 
 const SignUp = () => {
-        const {form, isLoading, isSuccess, handleChange, handleSubmit} = useContext(GeneralContext)
+        const {form, isLoading, isSuccess, handleChange, handleSubmit, message, isFailed} = useContext(GeneralContext)
 
         const navigate  = useNavigate();
 
@@ -17,13 +18,13 @@ const SignUp = () => {
                 } else {
                     alert('Error Navigating')
                 }
-            })
+            }, [isSuccess, navigate])
         }
     return (
         <>
        <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
       <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
-        <div className='flex flex-col w-screen px-4 lg:w-[60%]'>
+        <div className='flex flex-col w-screen px-4 lg:w-[50%]'>
             <form className='flex flex-col gap-4 justify-center lg:px-10' onSubmit={handleSubmit} >
             <h2 className='text-3xl font-medium text-center lg:mb-4'>Sign Up</h2>
 
@@ -94,7 +95,7 @@ const SignUp = () => {
               className='border mx-auto p-2 w-full lg:w-96 bg-[#252b63] text-white rounded-xl'
               type='submit'
             >
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Signing Up...' : 'SignUp'}
             </button>
          
                 </form>
@@ -117,12 +118,14 @@ const SignUp = () => {
 </div>
 </div>
 
-            <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
+        <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
 
         <div  className={isSuccess ? 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto' : 'hidden'}>
         <FaCheckCircle size={80} color='green'/>
         <h2 className='font-medium'>Sign Up SuccessFul!</h2>
             </div>
+
+            {isFailed && (<ErrorComponent Error={message}/>)}
            
             {isLoading ? (
                  <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>

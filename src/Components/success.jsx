@@ -10,7 +10,7 @@ const Success = ({message}) => {
         
         <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
         <FaCheckCircle size={80} color='green'/>
-        <h2>Session Created SuccessFully</h2>
+        <h2>Success</h2>
         
         <h2 className='font-medium'>{message}!</h2>
             </div>

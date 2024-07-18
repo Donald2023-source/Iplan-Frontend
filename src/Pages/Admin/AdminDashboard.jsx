@@ -1,49 +1,52 @@
-import Aside from "../../Components/aside"
+import { useContext, useEffect } from "react"
+import Nav from "../../Components/Nav"
 import { FaCheck, FaCheckCircle, FaUser } from "react-icons/fa"
+import { GeneralContext } from "../../Context/Context"
+import '../../App.css'
 const AdminDashboard = () => {
+useEffect(() => {
+  fetchSessions();
+  fetchTerms();
+  fetchClasses();
+}, [])
+  const {sessions, fetchSessions, terms, fetchTerms, classes, fetchClasses} = useContext(GeneralContext)
     return (
         <>
-        <div className="flex">
-        <div className="fixed">
-      <Aside/>
+        <div className="bg-gray-200 mx-auto">
+        <div>
+          <Nav/>
         </div>
-        <div className="absolute left-80 w-[79%]">
-          <div className="flex items-center justify-between px-10 py-2">
-            <h2 className="font-medium text-lg">Dashboard</h2>
-            <span className="flex items-center gap-4">
-              <FaUser color="gray" size={25}/>
-              <h2>UserName</h2>
-            </span>
-          </div>
-          <hr className="ml-10 my-2" />
-          <div className="flex gap-8">
+        <div>
+          <div className="flex lg:flex-row flex-col justify-around">
             <div>
               <div>
-          <div className="flex gap-7 ml-10">
+          <div className="flex justify-around gap-3 lg:gap-24 mt-5">
             <section className="bg-[#FFEFE7] w-fit py-4 px-10 flex flex-col gap-2 rounded-lg">
-              <h2 className="font-medium text-lg">Sections</h2>
-              <h2 className="text-3xl font-bold">27</h2>
-              <h4 className="text-[#FF5151]">Number of Sessions</h4>
+              <h2 className="font-medium text-lg">User</h2>
+              <h2 className="text-3xl font-bold">30</h2>
+              <h4 className="text-[#FF5151] text-xs">Number of Users</h4>
             </section>
 
-            <section className="bg-[#3784f146] w-fit py-4 px-6 flex flex-col gap-2 rounded-lg">
-              <h2 className="font-medium text-lg">Terms</h2>
-              <h2 className="text-3xl font-bold">3</h2>
-              <h4 className="text-[#3786F1] text-sm">Maximum Number of Terms</h4>
+            <section className="bg-[#3784f146] py-4 px-6 flex flex-col gap-2 rounded-lg">
+              <h2 className="font-medium text-lg">Sessions</h2>
+              <h2 className="text-3xl font-bold">{sessions.length}</h2>
+              <h4 className="text-[#3786F1] text-xs">Number of Sessions</h4>
             </section>
 
             <section className="bg-[#FFEFE7] w-fit py-4 px-10 flex flex-col gap-2 rounded-lg">
               <h2 className="font-medium text-lg">Classes</h2>
               <h2 className="text-3xl font-bold">6</h2>
-              <h4 className="text-[#FF5151]">Number of classes</h4>
+              <h4 className="text-[#FF5151] text-xs">Number of classes</h4>
             </section>
           </div>
-          <div className="ml-10 mt-7 border p-2 shadow-sm rounded-lg hover:scale-105 transition duration-500">
+
+          {/* ======= Benefits ======= */}
+          <div className=" mt-7 border p-2 bg-white shadow-sm rounded-lg hover:scale-105 lg:w-[50rem] transition duration-500">
             <h2 className="font-medium text-lg">Benefits</h2>
             <p className="leading-8"><span className="font-medium">Iplan </span>is a versatile platform designed for educators to upload and share lesson Plans. It offers several benefits. Overall, iplan enhances communication, organization and continous improvement in educational planning</p>
           </div>
 
-          <div className="ml-10 mt-6 p-2 py-4 flex flex-col gap-6 border shadow-sm rounded-lg">
+          <div className="mt-6 p-2 py-4 flex flex-col gap-6 border shadow-sm  rounded-lg bg-white">
             <h2 className="text-center font-bold">How to Use Iplan</h2>
             <span className="bg-[#E0E0E0] border py-2 px-1 rounded-md">
               <h2 className="text-[#686868] font-bold">Step 1.</h2>
@@ -69,7 +72,7 @@ const AdminDashboard = () => {
           </div>
           </div>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 mt-5">
           <div className="w-[27rem] rounded-lg bg-[#1B204A] text-white border p-3">
             <h2 className="font-bold text-xl border-b py-2">Iplan</h2>
             <span>

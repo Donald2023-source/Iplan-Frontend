@@ -5,18 +5,22 @@ import { GeneralContext } from '../../Context/Context';
 import { ThreeDots } from 'react-loader-spinner';
 import check from '../../assets/check_3699516.png'
 import { FaCheckCircle } from 'react-icons/fa';
+import ErrorComponent from '../../Components/ErrorComponent';
 
 const LoginAdmin = () => {
-  const { AdminLoginChange, handleAdminloginSubmit, AdminLoginForm, isLoading, isSuccess } = useContext(GeneralContext);
+  const { AdminLoginChange, handleAdminloginSubmit, AdminLoginForm, isLoading, isSuccess, isFailed, message } = useContext(GeneralContext);
+  
   const navigate = useNavigate()
 
-  const redirectFunction = () => {
+  
     useEffect(() => {
       if(isSuccess) {
         navigate('/lessonPlans')
       }
-    }, [isSuccess, navigate])
-  }
+    }, [isSuccess, navigate]);
+
+    
+  
   return (
     <>
       <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
@@ -67,7 +71,7 @@ const LoginAdmin = () => {
             
 
             <button
-            onClick={redirectFunction}
+      
               className='border mx-auto p-2 w-full lg:w-96 bg-[#252b63] text-white rounded-xl'
               type='submit'
             >
@@ -82,8 +86,8 @@ const LoginAdmin = () => {
                 <h4 className='text-[#252b63] font-bold'>Sign Up</h4>
               </Link>
             </span>
-            <Link to={'/adminSignup'}>
-              <h4 className='text-center'>Admin?</h4>
+            <Link to={'/signUp'}>
+              <h4 className='text-center'>User?</h4>
             </Link>
           </div>
         <div className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
@@ -94,19 +98,15 @@ const LoginAdmin = () => {
           <img className='rounded-l-2xl h-[45rem]' src={page} alt="Login" />
           </div>
 </div>
-        {isSuccess && (
-       <div  className='flex absolute right-0 left-0 top-52 flex-col items-center gap-4  bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'>
-       <FaCheckCircle size={80} color='green'/>
-         <h2 className='font-medium'>Sign Up SuccessFul!</h2>
-          </div>
-        )}
-    
+
       </div>
       {isSuccess ? (
         <div className='absolute top-5 left-[50%] bg-black text-white shadow-lg py-3 px-5 rounded'>
           <h2 className='flex items-center gap-2'><img className='h-5' src={check} alt="" />Login Successful</h2>
         </div>
       ) : null}
+
+      {isFailed && (<ErrorComponent Error={message}/>)}
 
       {isLoading && (
         <div style={{ height: '100vh', width: '100vw', backgroundColor: 'black', opacity: '0.92', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

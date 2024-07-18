@@ -3,6 +3,7 @@ import { GeneralContext } from "../../Context/Context";
 import color from '../../assets/Color.jpg';
 import cap from '../../assets/Cap (2).jpg';
 import { FaCheckCircle, FaTimes, FaUpload, FaUserCheck } from "react-icons/fa";
+import MyPdfViewer from "../Admin/Viewer/lessonPlanViewer";
 
 const UserDashboard = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -43,7 +44,8 @@ const UserDashboard = () => {
   const [isUploadDialogue, setIsUploadDialogue] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [message, setMessage] = useState('');
-  const [firstName, setFirstName] = useState('')
+  const [firstName, setFirstName] = useState('');
+  const [isPdfViewerVisible, setIsPdfViewerVisible] = useState(false)
   
 
   const handleTitleChange = (e) => {
@@ -343,6 +345,10 @@ const UserDashboard = () => {
             lessonPlans.map((plan) => (
               <div key={plan._id} onClick={() => handleLessonPlanSelect(plan._id)}>
                 <h2>{plan.title}</h2>
+                {isPdfViewerVisible && (
+                    <MyPdfViewer fileUrl={plan.fileUrl}/>
+                )}
+              
               </div>
             ))}
         </div>
@@ -366,7 +372,7 @@ const UserDashboard = () => {
             ))}
         </div>
         </div>
-        <button className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">View </button>
+        <button onClick={() => setIsPdfViewerVisible(!isPdfViewerVisible)} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">View </button>
     </div>
     {isLoading ? (
                  <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>

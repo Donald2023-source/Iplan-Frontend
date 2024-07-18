@@ -90,7 +90,7 @@ export const GeneralProvider = ({ children }) => {
   const [Error, setError] = useState('');
   const [terms, setTerms] = useState([]);
   const [classes, setClasses] = useState([]);
-  
+  const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,6 +125,8 @@ export const GeneralProvider = ({ children }) => {
     });
   };
 
+  
+
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -140,8 +142,13 @@ export const GeneralProvider = ({ children }) => {
       if (response.ok) {
         console.log('Admin Created Successfully', data);
         setIsSuccess(true);
+         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('AdminfirstName', data.user.firstName); 
       } else {
         console.error('Error creating new Admin:', data.message);
+        setIsFailed(true);
+        setMessage(data.message)
       }
     } catch (error) {
       console.error('An error occurred:', error.message);
@@ -164,7 +171,7 @@ export const GeneralProvider = ({ children }) => {
       if (response.ok) {
         console.log('User created successfully:', data);
         setIsSuccess(true);
-        localStorage.setItem('firstName', data.firstName); // Store firstName
+        localStorage.setItem('firstName', data.firstName);
       } else {
         console.error('Error creating user:', data.message);
       }
@@ -210,14 +217,17 @@ export const GeneralProvider = ({ children }) => {
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        localStorage.setItem('firstName', data.user.firstName); // Store firstName
+        localStorage.setItem('AdminFirstName', data.admin.firstName); 
       } else {
         console.error('Error logging in user:', data.message);
         setIsLoading(false);
+        setMessage(data.message)
+        setIsFailed(true)
       }
     } catch (error) {
       console.error('An error occurred:', error.message);
       setIsLoading(false);
+      setIsFailed(true)
     }
   };
 
@@ -386,7 +396,9 @@ export const GeneralProvider = ({ children }) => {
         myId,
         lessonPlans,
         selectedSubjectId,
-        handleSubjectChange
+        handleSubjectChange,
+        message, 
+        setMessage,
       }}
     >
       {children}
