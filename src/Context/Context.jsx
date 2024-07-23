@@ -74,6 +74,7 @@ export const GeneralProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([])
   const [sessions, setSessions] = useState([]);
   const [selectedSessionId, setSelectedSessionId] = useState(getSessionIdFromLocalStorage);
   const [selectedSession, setSelectedSession] = useState(getSessionFromLocalStorage);
@@ -91,7 +92,8 @@ export const GeneralProvider = ({ children }) => {
   const [terms, setTerms] = useState([]);
   const [classes, setClasses] = useState([]);
   const [message, setMessage] = useState('');
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [comments, setComments] = useState([])
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({
@@ -125,7 +127,15 @@ export const GeneralProvider = ({ children }) => {
     });
   };
 
-  
+  // =======login Check=========
+  const logIn = () => {
+    setIsLoggedIn(false);
+  };
+
+  const logOut = () => {
+    setIsLoggedIn(false);
+  };
+
 
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
@@ -318,6 +328,20 @@ export const GeneralProvider = ({ children }) => {
     }
   };
 
+const fetchUsers = async () => {
+  try {
+    const response = await fetch ('http://localhost:3000/api/auth/users');
+    if(response.ok) {
+      const data  = await response.json();
+      setUsers(data)
+    } else {
+      setIsFailed(true)
+    }
+  } catch (error) {
+    console.error('Error fetching users', error.message)
+  }
+}
+
   const handleClassSelect = (e) => {
     const id = e.target.value;
     const selectedClass = classes.find(classItem => classItem.id === parseInt(id));
@@ -342,7 +366,7 @@ export const GeneralProvider = ({ children }) => {
     setSelectedSubjectId(selectedSubjectId); // Update state
   };
   
-
+  
   return (
     <GeneralContext.Provider
       value={{
@@ -399,6 +423,12 @@ export const GeneralProvider = ({ children }) => {
         handleSubjectChange,
         message, 
         setMessage,
+        fetchUsers,
+        users,
+        logIn,
+        logOut,
+        isLoggedIn,
+        comments
       }}
     >
       {children}

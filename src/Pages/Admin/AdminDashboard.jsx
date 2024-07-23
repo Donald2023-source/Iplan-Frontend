@@ -4,12 +4,14 @@ import { FaCheck, FaCheckCircle, FaUser } from "react-icons/fa"
 import { GeneralContext } from "../../Context/Context"
 import '../../App.css'
 const AdminDashboard = () => {
-useEffect(() => {
-  fetchSessions();
-  fetchTerms();
-  fetchClasses();
-}, [])
-  const {sessions, fetchSessions, terms, fetchTerms, classes, fetchClasses} = useContext(GeneralContext)
+  const {sessions, fetchSessions, users, fetchTerms, fetchUsers, classes, fetchClasses} = useContext(GeneralContext);
+
+  useEffect(() => {
+    fetchSessions();
+    fetchTerms();
+    fetchClasses();
+    fetchUsers();
+  }, []);
     return (
         <>
         <div className="bg-gray-200 mx-auto">
@@ -23,7 +25,7 @@ useEffect(() => {
           <div className="flex justify-around gap-3 lg:gap-24 mt-5">
             <section className="bg-[#FFEFE7] w-fit py-4 px-10 flex flex-col gap-2 rounded-lg">
               <h2 className="font-medium text-lg">User</h2>
-              <h2 className="text-3xl font-bold">30</h2>
+              <h2 className="text-3xl font-bold">{users.length}</h2>
               <h4 className="text-[#FF5151] text-xs">Number of Users</h4>
             </section>
 

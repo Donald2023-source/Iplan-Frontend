@@ -11,6 +11,7 @@ import LoginUser from './Pages/User/login'
 import UserDashboard from './Pages/User/UserDashboard'
 import AdminDashboard from './Pages/Admin/AdminDashboard'
 import LessonPlans from './Pages/Admin/LessonPlans'
+import Users from './Pages/Admin/Users'
 const App = () => {
   return (
     <>
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/userDashboard' element={<UserDashboard/>}/>
         <Route path='/adminDashboard' element={<AdminDashboard/>}/>
         <Route path='/lessonPlans' element={<LessonPlans/>}/>
+        <Route path='/users' element={<Users/>}/>
         
       </Routes>
     </BrowserRouter>

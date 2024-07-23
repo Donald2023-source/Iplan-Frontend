@@ -9,17 +9,14 @@ import ErrorComponent from '../../Components/ErrorComponent';
 const SignUp = () => {
         const {form, isLoading, isSuccess, handleChange, handleSubmit, message, isFailed} = useContext(GeneralContext)
 
-        const navigate  = useNavigate();
+        const navigate = useNavigate();
 
-        const redirectFunction = () => {
-            useEffect(() => {
-                if(isSuccess) {
-                    navigate('/userDashboard')
-                } else {
-                    alert('Error Navigating')
-                }
-            }, [isSuccess, navigate])
-        }
+        useEffect(() => {
+          if (isSuccess) {
+            navigate('/userDashboard');
+          }
+        }, [isSuccess, navigate]);
+
     return (
         <>
        <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
@@ -91,7 +88,6 @@ const SignUp = () => {
                     </fieldset>
                     
             <button 
-            onClick={redirectFunction}
               className='border mx-auto p-2 w-full lg:w-96 bg-[#252b63] text-white rounded-xl'
               type='submit'
             >

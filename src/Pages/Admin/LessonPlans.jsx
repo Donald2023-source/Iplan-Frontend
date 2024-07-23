@@ -12,6 +12,7 @@ import { ThreeDots } from "react-loader-spinner";
 import Error from "../../Components/ErrorComponent";
 import ErrorComponent from "../../Components/ErrorComponent";
 import MyPdfViewer from "./Viewer/lessonPlanViewer";
+import Nav from "../../Components/Nav";
 
 
 const LessonPlans = () => {
@@ -40,7 +41,7 @@ const LessonPlans = () => {
   
   const [time, setTime] = useState(new Date());
 
- console.log(time.toTimeString())
+//  console.log(time.toTimeString())
  useEffect(() => {
   setInterval(() => setTime(new Date()))
  }, [])
@@ -52,7 +53,7 @@ const LessonPlans = () => {
   const[isTermList, setIsTermList] = useState(false);
   const [createTermDialogue, setCreateTermDialogue] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [commentSuccessFul, setCommentSuccessFul] = useState(false);
+  const [commentError, setCommentError] = useState(false);
   const [isSideVisible, setIsSideVisible]=useState(false);
   const [toggleComment, setToggleComment] = useState(false);
   const [isViewerVisible, setIsViewerVisible] = useState(false);
@@ -60,11 +61,19 @@ const LessonPlans = () => {
   const [selectedLessonPlanIds, setSelectedLessonPlanIds] = useState([]);
   const [comments, setComments] = useState({});
   const [AdminFirstName, setAdminFirstName] = useState('')
-  const [isAvailable, setIsAvailable] = useState(false)
+  const [isAvailable, setIsAvailable] = useState(false);
+  const [deleteLessonPlan, setDeleteLessonPlan] = useState(false);
+  const [isConfirmDeleteLessonPlan, setIsConfirmDeleteLessonPlan] = useState(false);
+  const [isChecked, setIsChecked] = useState(false)
+
 
   const toggleConfirmation = () => {
     setIsConfirm(!isConfirm)
   };
+
+const toggleIsLessonPlanDelete = () => {
+  setIsConfirmDeleteLessonPlan(!isConfirmDeleteLessonPlan)
+}
   const toggleTermList = () => {
     setIsTermList(!isTermList)
   };
@@ -81,6 +90,9 @@ const LessonPlans = () => {
     setIsDelete(!isDelete)
   };
 
+  const toggleLessonPlanDelete = () => {
+    setDeleteLessonPlan(!deleteLessonPlan);
+  }
   const handleCommentToggle = () => {
     setToggleComment(!toggleComment)
   }
@@ -88,6 +100,9 @@ const LessonPlans = () => {
     setCurrentFileUrl(fileUrl);
     setIsViewerVisible(!isViewerVisible);
   };
+
+
+ 
 
   useEffect(() => {
     const storedFirstName = localStorage.getItem('AdminFirstName');
@@ -210,24 +225,39 @@ const LessonPlans = () => {
   };
  
   const deleteSelectedLessonPlans = async () => {
-    setIsLoading(true)
+    if (!isChecked) {
+      alert('Tick the box before deleting');
+      setIsSuccess(false);
+      toggleIsLessonPlanDelete()
+      return;
+    }
+  
+    setIsLoading(true);
     try {
       const deletePromises = selectedLessonPlanIds.map(lessonPlanId => {
         return fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${classId}/subjects/${selectedSubjectId}/lessonPlans/${lessonPlanId}`, {
           method: 'DELETE',
         });
       });
-
+  
       await Promise.all(deletePromises);
-      
+  
       console.log('Selected lesson plans deleted');
+      setMessage('Selected Lessonplan deleted');
+      setIsSuccess(true);
+      fetchLessonPlans();
       setIsLoading(false);
-      fetchLessonPlans(); 
-      setSelectedLessonPlanIds([]); 
+      setSelectedLessonPlanIds([]);
+      setMessage('Lesson Plan Deleted Successfully');
+     toggleIsLessonPlanDelete()
     } catch (error) {
       console.error('Error deleting lesson plans', error.message);
+      setIsLoading(false);
+      setIsSuccess(false);
     }
   };
+  
+
   
   const createNewTerm = async (e) => {
     e.preventDefault();
@@ -301,21 +331,24 @@ const LessonPlans = () => {
     }
   }, [selectedSessionId, selectedTermId, selectedClassId]);
 
-  console.log(`SessionId ${selectedSessionId}`);
-  console.log(`TermId: ${selectedTermId}`);
-  console.log(`selected Class Id: ${selectedClassId}`);
-  console.log(`My Id ${myId}`);
-  console.log(`SubjectId: ${selectedSubjectId}`);
-  console.log(`SelectedSession: ${selectedSession}`)
+  // console.log(`SessionId ${selectedSessionId}`);
+  // console.log(`TermId: ${selectedTermId}`);
+  // console.log(`selected Class Id: ${selectedClassId}`);
+  // console.log(`My Id ${myId}`);
+  // console.log(`SubjectId: ${selectedSubjectId}`);
+  // console.log(`SelectedSession: ${selectedSession}`)
 
   const handleLessonPlanCheckboxChange = (e, lessonPlanId) => {
     if (e.target.checked) {
       setSelectedLessonPlanIds(prevIds => [...prevIds, lessonPlanId]);
       console.log(`LessonPlan Id ${lessonPlanId}`);
+      setIsChecked(e.target.checked)
     } else {
       setSelectedLessonPlanIds(prevIds => prevIds.filter(id => id !== lessonPlanId));
     }
   };
+
+
 
   const handleCommentChange = (e, lessonPlanId) => {
     setComments({
@@ -324,10 +357,14 @@ const LessonPlans = () => {
     });
   };
 
+  // =========Comment==========
   const submitComment = async (lessonPlanId) => {
     const comment = comments[lessonPlanId];
-    if (!comment) return;
-
+    handleCommentToggle()
+    if (!comment) {
+      setCommentError(true);
+      return;
+    }
     try {
       const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/lessonPlans/${lessonPlanId}/comments`, {
         method: 'POST',
@@ -337,21 +374,22 @@ const LessonPlans = () => {
         body: JSON.stringify({ text: comment }),
       });
       
-      setCommentSuccessFul(true)
       if (!response.ok) {
+        setIsFailed(true);
         throw new Error('Failed to submit comment');
       }
-
+  
       const responseData = await response.json();
       console.log('Comment submitted successfully:', responseData);
-      setCommentSuccessFul(false)
-      setCommentSuccessFul(responseData.message)
+      setIsSuccess(true);
+      setMessage('Sent');
       fetchLessonPlans();
-      alert(commentSuccessFul)
     } catch (error) {
       console.error('Error submitting comment:', error.message);
     }
   };
+  
+
 
 
   return (
@@ -359,9 +397,7 @@ const LessonPlans = () => {
     <div className="flex">
         <div className="bg-[#F2F5E5] relative w-screen h-screen">
               <div className="relative">
-          <div className="flex justify-between items-center py-3 bg-white rounded-xl px-8 my-3 mx-2">
-         <h2 className="font-bold mx-auto">{time.toLocaleTimeString()}</h2>     
-     </div>
+      <Nav/>
 
 
           <section className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
@@ -550,6 +586,7 @@ const LessonPlans = () => {
                   type="checkbox"
                   checked={selectedLessonPlanIds.includes(plan._id)}
                   onChange={e => handleLessonPlanCheckboxChange(e, plan._id)}
+                  required
                 />
                 <h2 className="lg:text-md hidden">{plan.title}</h2>
                 <h2 className="lg:block hidden">{plan.subjectName}</h2>          
@@ -570,19 +607,6 @@ const LessonPlans = () => {
               <FaComment onClick={handleCommentToggle} className="lg:hidden cursor-pointer" color="#6675FF" size={20}/>
                
                
-          {/* {isViewerVisible && (
-            <div>
-              <FaTimes className="cursor-pointer" size={30} color="black" onClick={() => setIsViewerVisible(false)} /> */}
-              
-            {/* </div>
-          )} */}
-  
-            {/* {plan.comments && plan.comments.map((comment, index) => (
-                <div key={index} className="border p-2 mt-2 rounded-lg">
-                  {comment.text}
-                </div>
-               
-              ))} */}
              <button onClick={handlePdfViewer} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">
                   View
                 </button>
@@ -591,12 +615,12 @@ const LessonPlans = () => {
                  <MyPdfViewer fileUrl={plan.fileUrl}/>
                 )}
              
-               <FaTrash onClick={deleteSelectedLessonPlans} className="cursor-pointer" color="#6675FF" size={20}/>
+               <FaTrash onClick={toggleIsLessonPlanDelete} className="cursor-pointer" color="#6675FF" size={20}/>
             </div>
 
             <div onClick={handleCommentToggle} className={toggleComment ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
 
-            <div className={toggleComment ? "fixed top-[40%] rounded-lg h-fit inset-0 py-5 w-fit px-7 left-8 flex flex-col items-center lg:hidden bg-white" : 'hidden'}>
+            <div className={toggleComment ? "fixed top-[40%] rounded-lg h-fit inset-0 py-5 w-fit px-7 left-0 mx-auto flex flex-col items-center lg:hidden bg-white" : 'hidden'}>
               <fieldset  className="flex border  items-center lg:text-md text-sm md:text-md justify-around rounded-lg bg-white w-72">
                 <input
                 type="text"
@@ -604,10 +628,14 @@ const LessonPlans = () => {
                   value={comments[plan._id] || ''}
                   onChange={(e) => handleCommentChange(e, plan._id)}
                   className=" text-wrap rounded-lg focus:outline-none p-4"
+                  required
                 />
                 <FaTelegram className="cursor-pointer"  onClick={() => submitComment(plan._id)}  color="#6675FF" size={20}/>
-
+                
                 </fieldset>
+                {commentError && (
+                  <p className="text-red-600 text-sm py-1">Comment cannot be empty</p>
+                )}
                 <FaTelegram className="cursor-pointer mt-5"  onClick={() => submitComment(plan._id)}  color="#6675FF" size={50}/>
                 </div>
                 <div className={isViewerVisible ? 'flex' : 'hidden'}>
@@ -644,12 +672,23 @@ const LessonPlans = () => {
               </span>
               </div> 
 
+
+           <div onClick={toggleLessonPlanDelete} className={isConfirmDeleteLessonPlan ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
+      
+              <div className={isConfirmDeleteLessonPlan ? "border z-50 inset-0 fixed h-fit mx-auto top-[18rem] bg-white shadow-xl w-fit p-4 rounded-xl" : 'hidden'}>
+              <h2>Are You sure you want to delete this LessonPlan?</h2>
+              <span className="flex justify-end gap-10 mt-10">
+                <button onClick={toggleIsLessonPlanDelete} className="border px-5 py-1 rounded-lg hover:bg-black hover:text-white transition duration-500">No</button>
+                <button onClick={deleteSelectedLessonPlans} className="border px-5 py-1 rounded-lg hover:bg-black hover:text-white transition duration-500">Yes</button>
+              </span>
+              </div> 
               <div>
+
               {isLoading ? (
                  <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
             <ThreeDots visible={true} height="80" width="80" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}}wrapperClass=""/>
             </div>     
-            ) : (console.log('Not Loading'))}
+            ) : ('')}
               </div>
     </>
   );
