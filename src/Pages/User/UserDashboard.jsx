@@ -2,10 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { GeneralContext } from "../../Context/Context";
 import color from "../../assets/Color.jpg";
 import cap from "../../assets/Cap (2).jpg";
-import { FaCheckCircle, FaTimes, FaUpload, FaUserCheck } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaEdit,
+  FaTimes,
+  FaUpload,
+  FaUserCheck,
+} from "react-icons/fa";
 import MyPdfViewer from "../Admin/Viewer/lessonPlanViewer";
 import { ThreeDots } from "react-loader-spinner";
 import Nav from "../../Components/Nav";
+import Success from "../../Components/success";
+import { h2 } from "fontawesome";
 
 const UserDashboard = () => {
   const getSubjectIdFromLocalStorage = () => {
@@ -17,7 +25,6 @@ const UserDashboard = () => {
     }
   };
 
- 
   const getLessonPlanIdFromLocalStorage = () => {
     try {
       return localStorage.getItem("selectedLessonPlanId") || "";
@@ -43,13 +50,6 @@ const UserDashboard = () => {
     sessions,
     terms,
     subjects,
-    setClasses,
-    setSessions,
-    setTerms,
-    setSelectedClassId,
-    setSubjects,
-    setClassId,
-    setSelectedSessionId,
     fetchSessions,
     handleSessionChange,
     handleTermChange,
@@ -59,7 +59,10 @@ const UserDashboard = () => {
     handleClassSelect,
     classItems,
     isLoading,
-    setIsLoading
+    setIsLoading,
+    setIsSuccess,
+    isSuccess,
+    setIsFailed
   } = useContext(GeneralContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -78,7 +81,18 @@ const UserDashboard = () => {
   const [message, setMessage] = useState("");
   const [firstName, setFirstName] = useState("");
   const [isPdfViewerVisible, setIsPdfViewerVisible] = useState(false);
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState([]);
+  const [currentLessonPlan, setCurrentLessonPlan] = useState({});
+  const [updatedTitle, setUpdatedTitle] = useState("");
+  const [updatedFile, setUpdatedFile] = useState(null);
+  const [updateDialogue, setUpdateDialogue] = useState(false);
+
+  const [time, setTime] = useState(new Date());
+
+    //  console.log(time.toTimeString())
+     useEffect(() => {
+      setInterval(() => setTime(new Date()))
+     }, [])
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -105,7 +119,6 @@ const UserDashboard = () => {
     }
   }, [selectedSessionId]);
 
-
   useEffect(() => {
     if (selectedTermId) {
       fetchClasses();
@@ -117,8 +130,6 @@ const UserDashboard = () => {
       fetchSubjects();
     }
   }, [selectedClassId]);
-
-
 
   useEffect(() => {
     if (selectedLessonPlanId) {
@@ -216,6 +227,9 @@ const UserDashboard = () => {
         fetchUserLessonPlans();
       } else {
         setErrorMessage(data.error || "Failed to upload file");
+        setIsLoading(false)
+        setIsFailed(true)
+        setMessage(data.message)
       }
     } catch (error) {
       setErrorMessage("Error uploading file: " + error.message);
@@ -242,7 +256,7 @@ const UserDashboard = () => {
   const handleLessonPlanSelect = (lessonPlanId) => {
     localStorage.setItem("selectedLessonPlanId", lessonPlanId);
     setSelectedLessonPlanId(lessonPlanId);
-    fetchComments()
+    fetchComments();
   };
 
   useEffect(() => {
@@ -256,8 +270,8 @@ const UserDashboard = () => {
     }
   }, [selectedSessionId, selectedTermId, selectedClassId, selectedSubjectId]);
 
-  console.log(selectedSubjectId);
-  console.log(selectedLessonPlanId);
+  // console.log(selectedSubjectId);
+  // console.log(selectedLessonPlanId);
 
   const fetchComments = async () => {
     try {
@@ -265,20 +279,60 @@ const UserDashboard = () => {
         const response = await fetch(
           `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}/comments`
         );
-  
+
         if (response.ok) {
           const data = await response.json();
-          setComments(data || []); // Update state with the comments array
-          console.log(data); // Log to check the comments
+          setComments(data || []);
+          console.log(data);
         } else {
-          console.error('Failed to fetch comments:', response.statusText);
+          console.error("Failed to fetch comments:", response.statusText);
         }
       }
     } catch (error) {
-      console.error('Error fetching comments:', error.message);
+      console.error("Error fetching comments:", error.message);
     }
   };
-  
+
+  const handleUpdateLessonPlan = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("title", updatedTitle);
+    if (updatedFile) {
+      formData.append("lessonPlan", updatedFile);
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Lesson Plan updated successfully", data);
+        setLessonPlans((prev) =>
+          prev.map((plan) => (plan._id === selectedLessonPlanId ? data : plan))
+        );
+        setUpdateDialogue(false);
+        setMessage("Lesson Plan Updated Successfully");
+        setIsSuccess(true);
+      } else {
+        console.error("Failed to update lesson plan", data.error);
+        setErrorMessage(data.error || "Failed to update lesson plan");
+        setMessage("Lesson Plan Updated");
+      }
+    } catch (error) {
+      console.error("Error updating lesson plan:", error.message);
+      setErrorMessage("Error updating lesson plan: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubjectChange = (e) => {
     const selectedSubjectId = e.target.value;
@@ -286,15 +340,23 @@ const UserDashboard = () => {
     setSelectedSubjectId(selectedSubjectId);
   };
 
-useEffect(() => {
-  fetchComments();
-})
-  
+  const handleUpdateDialogue = () => {
+    setUpdateDialogue(!updateDialogue);
+    setUpdatedTitle(plan.title);
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  // console.warn(`selectedLessonPlanId: ${selectedLessonPlanId}`);
 
   return (
     <div>
       <div>
-        <Nav />
+        <div className="flex justify-between mx-auto mt-1 rounded-lg w-[98%] px-5 lg:px-20 bg-white py-2 shadow items-center">
+          <text className="text-center w-full font-semibold hover:scale-105 transition">{time.toLocaleTimeString()}</text>
+        </div>
         <div className="mx-auto my-4 border lg:w-[80%] w-screen bg-[#252b63] py-12 lg:py-20  rounded-lg text-white">
           <h2 className="text-center text-3xl">
             Welcome <span className="font-medium">{firstName}!</span>
@@ -433,7 +495,6 @@ useEffect(() => {
         </div>
       </div>
 
-        
       {/* Upload Icon */}
       <FaUpload
         className="mx-auto cursor-pointer my-4"
@@ -441,6 +502,56 @@ useEffect(() => {
         size={55}
         color="blue"
       />
+
+      <div
+        onClick={() => setUpdateDialogue(!updateDialogue)}
+        className={
+          updateDialogue
+            ? "h-screen inset-0 fixed opacity-70 bg-black"
+            : "hidden"
+        }
+      />
+
+      {/* ======== Update Lesson plan========= */}
+      {updateDialogue ? (
+        <div className="absolute top-4 rounded-lg shadow-md right-0 left-0 w-fit mx-auto flex flex-col bg-white">
+          <h2 className="text-center font-semibold py-4">Update Lesson Plan</h2>
+          <form
+            className="flex flex-col rounded-lg gap-6 px-3 py-6 items-center"
+            onSubmit={handleUpdateLessonPlan}
+          >
+            <label>
+              Title:
+              <input
+                type="text"
+                value={updatedTitle}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+                className="p-2 border w-[20rem] lg:w-[25rem] rounded-lg"
+              />
+            </label>
+            <label>
+              File:
+              <input
+                type="file"
+                onChange={(e) => setUpdatedFile(e.target.files[0])}
+                className="p-2 lg:w-[25rem] rounded-lg border"
+              />
+            </label>
+            <button
+              className="bg-blue-700 hover:scale-105 transition rounded-lg p-2 text-white"
+              type="submit"
+            >
+              Update
+            </button>
+          </form>
+        </div>
+      ) : (
+        <h2 className="hidden">Man</h2>
+      )}
+    {isSuccess && (
+     <Success message={message}/> 
+    )}
+    
 
       {/* Success Message */}
       <div
@@ -466,8 +577,6 @@ useEffect(() => {
         </div>
       )}
 
-      
-
       <div className="flex items-center justify-around">
         <div>
           <h2 className="text-center">My Lesson Plans</h2>
@@ -480,31 +589,44 @@ useEffect(() => {
                 >
                   <div className="flex justify-between w-screen px-3">
                     <h2>{plan.title}</h2>
+
+                    <div className="flex items-center gap-10">
                     <button
                       onClick={() => setIsPdfViewerVisible(!isPdfViewerVisible)}
                       className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border"
                     >
                       {isPdfViewerVisible ? "Close" : "View"}
                     </button>
+
+                    <FaEdit
+                      onClick={handleUpdateDialogue}
+                      size={30}
+                      color="blue"
+                    />
                   </div>
                   
-              {/* =============Comment========= */}
-          <div>
-         {comments.map((comment) => (
-          <span className="flex ml-3 gap-2 items-center" key={comment._id}>
-            <h2 className="font-semibold">Comment: </h2>
-            <h2 className="text-lg">{comment.text}!</h2>
-          </span>
-          
-         ))}
-          </div> 
+                  </div>
+
+                  
+                  {/* =============Comment========= */}
+                  <div>
+                    {comments.map((comment) => (
+                      <span
+                        className="flex ml-3 py-4 gap-2 items-center"
+                        key={comment._id}
+                      >
+                        <h2 className="font-semibold">Comment: </h2>
+                        <h2 className="text-md">{comment.text}!</h2>
+                      </span>
+                    ))}
+                  </div>
+
 
                   {isPdfViewerVisible && <MyPdfViewer fileUrl={plan.fileUrl} />}
                 </div>
               ))}
           </div>
         </div>
-              
       </div>
       {isLoading ? (
         <div
@@ -532,7 +654,7 @@ useEffect(() => {
           />
         </div>
       ) : (
-        console.log("Not Loading")
+       <h2 className="hidden">Man</h2>
       )}
     </div>
   );

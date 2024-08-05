@@ -152,19 +152,21 @@ export const GeneralProvider = ({ children }) => {
       if (response.ok) {
         console.log('Admin Created Successfully', data);
         setIsSuccess(true);
+        setMessage('New Admin created Successfully')
          localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        localStorage.setItem('AdminfirstName', data.user.firstName); 
+        localStorage.setItem('adminFirstName', data.firstName); 
       } else {
         console.error('Error creating new Admin:', data.message);
         setIsFailed(true);
-        setMessage(data.message)
-      }
+        setMessage(data.message);
+      };
     } catch (error) {
       console.error('An error occurred:', error.message);
     }
     setIsLoading(false);
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -181,9 +183,12 @@ export const GeneralProvider = ({ children }) => {
       if (response.ok) {
         console.log('User created successfully:', data);
         setIsSuccess(true);
+        setMessage('Sign Up successFull')
         localStorage.setItem('firstName', data.firstName);
       } else {
         console.error('Error creating user:', data.message);
+        setIsFailed(true);
+        setMessage(data.message)
       }
     } catch (error) {
       console.error('An error occurred:', error.message);
@@ -224,10 +229,11 @@ export const GeneralProvider = ({ children }) => {
         console.log('Login Successful:', data);
         setIsLoading(false);
         setIsSuccess(true);
+        setMessage('Email or password is incorrect')
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        localStorage.setItem('AdminFirstName', data.admin.firstName); 
+        localStorage.setItem('adminFirstName', data.admin.firstName); 
       } else {
         console.error('Error logging in user:', data.message);
         setIsLoading(false);
@@ -240,21 +246,6 @@ export const GeneralProvider = ({ children }) => {
       setIsFailed(true)
     }
   };
-
-  // const uploadLessonPlan = async (formData) => {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/api/lesson-plans/upload', {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error(`Error uploading lesson plan: ${response.statusText}`);
-  //     }
-  //     return await response.json();
-  //   } catch (error) {
-  //     console.error('Error uploading lesson plan:', error);
-  //   }
-  // };
   
   const fetchSessions = async () => {
     try {

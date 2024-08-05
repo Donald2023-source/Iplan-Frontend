@@ -101,13 +101,11 @@ const toggleIsLessonPlanDelete = () => {
     setIsViewerVisible(!isViewerVisible);
   };
 
-
- 
-
   useEffect(() => {
-    const storedFirstName = localStorage.getItem('AdminFirstName');
+    const storedFirstName = localStorage.getItem('adminFirstName');
     if (storedFirstName) {
       setAdminFirstName(storedFirstName);
+      console.log(AdminFirstName)
     }
   }, []);
 
@@ -299,7 +297,7 @@ const toggleIsLessonPlanDelete = () => {
       setSelectedTermId('');
       setSelectedTerm('');
       toggleTermDelete();
-      createSessionDialogue();
+      
       setIsSuccess(true)
     } catch (error) {
       console.error('Error deleting term', error.message);
@@ -341,7 +339,7 @@ const toggleIsLessonPlanDelete = () => {
   const handleLessonPlanCheckboxChange = (e, lessonPlanId) => {
     if (e.target.checked) {
       setSelectedLessonPlanIds(prevIds => [...prevIds, lessonPlanId]);
-      console.log(`LessonPlan Id ${lessonPlanId}`);
+      // console.log(`LessonPlan Id ${lessonPlanId}`);
       setIsChecked(e.target.checked)
     } else {
       setSelectedLessonPlanIds(prevIds => prevIds.filter(id => id !== lessonPlanId));
@@ -389,6 +387,9 @@ const toggleIsLessonPlanDelete = () => {
     }
   };
   
+  useEffect(() => {
+    console.log(AdminFirstName);
+  }, [AdminFirstName]);
 
 
 
@@ -514,8 +515,8 @@ const toggleIsLessonPlanDelete = () => {
 
             {/* =======Create Term ======== */}
           <div>
-            <form className={createTermDialogue ? "flex flex-col justify-center z-50 m-auto p-10 bg-white h-fit shadow-lg w-fit px-16 rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-[30rem] gap-12" : 'hidden'}  onSubmit={createNewTerm}>
-              <span className="flex justify-around items-center">
+            <form className={createTermDialogue ? "flex flex-col justify-center items-center z-50 m-auto py-10 bg-white h-fit shadow-lg w-fit px-7 rounded-xl lg:top-[-10rem] inset-0 fixed lg:w-fit gap-12" : 'hidden'}  onSubmit={createNewTerm}>
+              <span className="flex justify-around w-full items-center">
               <h2 className="text-2xl font-bold text-center text-[#002E]">Create Term</h2>
               <FaTimes onClick={toggleCreateTermDialogue} className="
               cursor-pointer " size={15} color="black"/>

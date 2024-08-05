@@ -10,23 +10,21 @@ const SignUp = () => {
 
         const navigate = useNavigate();
 
-        const redirectFunction = () => {
-         useEffect(() => {
+        useEffect(() => {
             if (isSuccess) {
-                navigate('/lessonPlans');
+              navigate('/lessonPlans');
             }
-        }, [isSuccess, navigate]);   
-        } 
-
+          }, [isSuccess, navigate]);
+          
     return (
         <>
           <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
       <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
         <div className='flex flex-col w-screen px-4 lg:w-[45%]'>
-                <form onSubmit={handleAdminSubmit} className='flex flex-col gap-3'>
+                <form onSubmit={handleAdminSubmit} className='flex flex-col gap-7'>
                     <h3 className='text-2xl py-2 font-bold mx-auto'>SIGN UP</h3>
                     <fieldset className='flex flex-col gap-3'>
-                    <label className='font-normal'>First Name</label>
+                    {/* <label className='font-normal'>First Name</label> */}
                         <input
                             name="firstName"
                             value={AdminForm.firstName}
@@ -39,7 +37,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>Last Name</label>
+                    {/* <label className='font-normal'>Last Name</label> */}
                         <input
                             name="lastName"
                             value={AdminForm.lastName}
@@ -52,7 +50,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>Email</label>
+                    {/* <label className='font-normal'>Email</label> */}
                         <input
                             name="email"
                             value={AdminForm.email}
@@ -65,7 +63,7 @@ const SignUp = () => {
                     </fieldset>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>Password</label>
+                    {/* <label className='font-normal'>Password</label> */}
                         <input
                             name="password"
                             value={AdminForm.password}
@@ -77,7 +75,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>Staff Id</label>
+                    {/* <label className='font-normal'>Staff Id</label> */}
                         <input
                             name="staffId"
                             value={AdminForm.staffId}
@@ -90,7 +88,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>Admin Key</label>
+                    {/* <label className='font-normal'>Admin Key</label> */}
                         <input
                             name="adminKey"
                             value={AdminForm.adminKey}
@@ -98,13 +96,13 @@ const SignUp = () => {
                             className='border-gray-200 border p-3 rounded-xl'
                             type="text"
                             placeholder='Create your Admin key'
-                            maxLength={6}
+                            maxLength={7}
                             required
                         />
                     </fieldset>
                                  
             <button 
-            onClick={redirectFunction}
+
               className='border mx-auto p-2 w-full lg:w-96 bg-[#252b63] text-white rounded-xl'
               type='submit'
             >

@@ -8,7 +8,7 @@ const Success = ({message}) => {
         <div>
         <div onClick={() => setIsSuccess(!isSuccess)} className={isSuccess ? "h-screen inset-0 fixed opacity-70 bg-black" : 'hidden'}/>
         
-        <div  className={isSuccess && 'flex absolute right-0 left-0 top-52 flex-col items-center gap-4 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
+        <div  className={isSuccess && 'flex text-center absolute right-0 left-0 top-52 flex-col items-center gap-5 bg-white shadow-lg p-10 border w-[20rem] rounded-lg mx-auto'}>
         <FaCheckCircle size={80} color='green'/>
         <h2>Success</h2>
         

@@ -27,12 +27,12 @@ const Nav = () => {
             <div>
                 <ul className={nav ? "flex flex-col gap-6  absolute right-2 lg:right-20 shadow-lg rounded-lg bg-white w-52 px-4 items-end" : 'hidden'}>
                     
-                    <Link to={'/adminDashboard'}>
+                    {/* <Link to={'/adminDashboard'}>
                          <li className="flex items-center hover:bg-blue-500 w-[100%] justify-between transition duration-500 rounded-lg cursor-pointer hover:text-white gap-3 py-2 px-3">
                         Home
                         <FaHome size={20} color="blue"/>
                         </li>
-                        </Link>
+                        </Link> */}
 
                         <Link to={'/lessonPlans'}>
                         <li className="flex gap-3 hover:bg-blue-500 w-[100%] justify-between transition duration-500 rounded-lg  hover:text-white py-2 cursor-pointer px-3">
@@ -42,7 +42,7 @@ const Nav = () => {
                         </Link>
                     
 
-                    <Link to={'/users'}>
+                    <Link to={'/lessonPlans'}>
                     <li className="flex hover:bg-blue-500 w-[100%] justify-between transition duration-500 rounded-lg  hover:text-white gap-4 cursor-pointer py-2 px-3">
                         Users
                         <FaUserAlt size={20} color="blue "/>

@@ -22,11 +22,11 @@ const SignUp = () => {
        <div className='bg-[#252b632f] h-screen flex px-2 items-center justify-center'>
       <div className='flex flex-col md:flex-row lg:flex-row justify-center gap-10 bg-white items-center md:p-3 p-10 lg:p-3 rounded-lg h-fit shadow-xl w-screen lg:w-[80%] lg:mx-auto'>
         <div className='flex flex-col w-screen px-4 lg:w-[50%]'>
-            <form className='flex flex-col gap-4 justify-center lg:px-10' onSubmit={handleSubmit} >
+            <form className='flex flex-col gap-8 justify-center lg:px-10' onSubmit={handleSubmit} >
             <h2 className='text-3xl font-medium text-center lg:mb-4'>Sign Up</h2>
 
                     <fieldset className='flex flex-col gap-1'>
-                    <label className='font-normal'>First Name</label>
+                    {/* <label className='font-normal'>First Name</label> */}
                         <input
                             name="firstName"
                             value={form.firstName}
@@ -38,7 +38,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-normal'>Last Name</label>
+                        {/* <label className='font-normal'>Last Name</label> */}
                         <input
                             name="lastName"
                             value={form.lastName}
@@ -50,7 +50,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-normal'>Email</label>
+                        {/* <label className='font-normal'>Email</label> */}
                         <input
                             name="email"
                             value={form.email}
@@ -62,7 +62,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-normal' >Password</label>
+                        {/* <label className='font-normal' >Password</label> */}
                         <input
                             name="password"
                             value={form.password}
@@ -74,7 +74,7 @@ const SignUp = () => {
                         />
                     </fieldset>
                     <fieldset className='flex flex-col gap-1'>
-                        <label className='font-normal'>Staff Id</label>
+                        {/* <label className='font-normal'>Staff Id</label> */}
                         <input
                             name="staffId"
                             value={form.staffId}
