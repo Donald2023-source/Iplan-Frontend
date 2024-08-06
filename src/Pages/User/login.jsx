@@ -36,7 +36,7 @@ const LoginUser = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('https://iplan-backend.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -48,6 +48,7 @@ const LoginUser = () => {
         console.log('Login Successful:', data);
         setIsLoading(false);
         setIsSuccess(true);
+        setMessage('Email or password is incorrect')
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data));
         localStorage.setItem('firstName', data.user.firstName);
@@ -131,7 +132,7 @@ const LoginUser = () => {
 <h2 className='font-medium'>Sign Up SuccessFul!</h2>
     </div>
 
-    {isFailed && (<ErrorComponent Error={message} />)}
+    {isFailed && (<ErrorComponent Error='Email or password is incorrect' />)}
    
     {isLoading ? (
          <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>

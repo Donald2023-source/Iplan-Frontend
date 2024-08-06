@@ -172,7 +172,7 @@ export const GeneralProvider = ({ children }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/auth/signup', {
+      const response = await fetch('https://iplan-backend.onrender.com/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -192,6 +192,7 @@ export const GeneralProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('An error occurred:', error.message);
+      setIsFailed(true)
     }
     setIsLoading(false);
   };
@@ -229,7 +230,7 @@ export const GeneralProvider = ({ children }) => {
         console.log('Login Successful:', data);
         setIsLoading(false);
         setIsSuccess(true);
-        setMessage('Email or password is incorrect')
+        setMessage(data.message)
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
