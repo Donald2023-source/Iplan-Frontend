@@ -207,7 +207,7 @@ const UserDashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`,
+        `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`,
         {
           method: "POST",
           body: formData,
@@ -215,6 +215,7 @@ const UserDashboard = () => {
       );
 
       const data = await response.json();
+      setIsLoading(false)
       if (response.ok) {
         console.log("File uploaded successfully", data);
         setTitle("");
@@ -233,13 +234,14 @@ const UserDashboard = () => {
       }
     } catch (error) {
       setErrorMessage("Error uploading file: " + error.message);
+      setIsLoading(false)
     }
   };
 
   const fetchUserLessonPlans = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`
+        `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`
       );
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -277,7 +279,7 @@ const UserDashboard = () => {
     try {
       if (selectedLessonPlanId) {
         const response = await fetch(
-          `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}/comments`
+          `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}/comments`
         );
 
         if (response.ok) {
@@ -305,7 +307,7 @@ const UserDashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}`,
+        `https://iplan-backend.onrender.com/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}`,
         {
           method: "PUT",
           body: formData,

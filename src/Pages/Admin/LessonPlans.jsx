@@ -174,7 +174,7 @@ const toggleIsLessonPlanDelete = () => {
     e.preventDefault();
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:3000/sessions', {
+      const response = await fetch('https://iplan-backend.onrender.com/sessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +203,7 @@ const toggleIsLessonPlanDelete = () => {
   const deleteSession = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}`, {
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}`, {
         method: "DELETE",
       });
       const data = await response.json();
@@ -233,7 +233,7 @@ const toggleIsLessonPlanDelete = () => {
     setIsLoading(true);
     try {
       const deletePromises = selectedLessonPlanIds.map(lessonPlanId => {
-        return fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${classId}/subjects/${selectedSubjectId}/lessonPlans/${lessonPlanId}`, {
+        return fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${classId}/subjects/${selectedSubjectId}/lessonPlans/${lessonPlanId}`, {
           method: 'DELETE',
         });
       });
@@ -261,7 +261,7 @@ const toggleIsLessonPlanDelete = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms`, {
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -273,7 +273,7 @@ const toggleIsLessonPlanDelete = () => {
       };
       const responseData = await response.json();
       setIsLoading(false);
-      console.log('Term Created Successfully', responseData);
+      // console.log('Term Created Successfully', responseData);
       fetchTerms(selectedSessionId);
 
     } catch (error) {
@@ -287,18 +287,21 @@ const toggleIsLessonPlanDelete = () => {
   const deleteTerm = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}`, {
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}`, {
         method: "DELETE",
       });
       const data = await response.json();
       setIsLoading(false)
-      console.log('Term deleted', data);
-      fetchTerms(selectedSessionId);
-      setSelectedTermId('');
-      setSelectedTerm('');
-      toggleTermDelete();
-      
-      setIsSuccess(true)
+      if(response.ok) {
+        // console.log('Term deleted', data);
+        fetchTerms(selectedSessionId);
+        setSelectedTermId('');
+        setSelectedTerm('');
+        toggleTermDelete();
+        setIsSuccess(true);
+        setMessage(data.messsage || 'Term deleted Successfully')
+      }
+     
     } catch (error) {
       console.error('Error deleting term', error.message);
       setIsFailed(true)
@@ -307,12 +310,12 @@ const toggleIsLessonPlanDelete = () => {
 
   const fetchLessonPlans = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/lessonPlans`);
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/lessonPlans`);
       if (response.ok) {
         console.log('Lesson plans fetched successfully');
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (Array.isArray(data)) {
         setLessonPlans(data);
       } else {
@@ -364,7 +367,7 @@ const toggleIsLessonPlanDelete = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/lessonPlans/${lessonPlanId}/comments`, {
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/lessonPlans/${lessonPlanId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

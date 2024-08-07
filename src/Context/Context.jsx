@@ -141,7 +141,7 @@ export const GeneralProvider = ({ children }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/auth/admin/signup', {
+      const response = await fetch('https://iplan-backend.onrender.com/api/auth/admin/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -159,7 +159,7 @@ export const GeneralProvider = ({ children }) => {
       } else {
         console.error('Error creating new Admin:', data.message);
         setIsFailed(true);
-        setMessage(data.message);
+        setMessage(data.message || 'An error Occured');
       };
     } catch (error) {
       console.error('An error occurred:', error.message);
@@ -197,9 +197,6 @@ export const GeneralProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-
-
-
   const [AdminLoginForm, setAdminLoginForm] = useState({
     email: '',
     password: '',
@@ -218,7 +215,7 @@ export const GeneralProvider = ({ children }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/auth/admin/login', {
+      const response = await fetch('https://iplan-backend.onrender.com/api/auth/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -230,7 +227,7 @@ export const GeneralProvider = ({ children }) => {
         console.log('Login Successful:', data);
         setIsLoading(false);
         setIsSuccess(true);
-        setMessage(data.message)
+        setMessage(data.message || 'Welcome back! Login successful')
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
@@ -250,7 +247,7 @@ export const GeneralProvider = ({ children }) => {
   
   const fetchSessions = async () => {
     try {
-      const response = await fetch('http://localhost:3000/sessions');
+      const response = await fetch('https://iplan-backend.onrender.com/sessions');
       if (!response.ok) {
         setIsFailed(true);
         throw new Error('Failed to fetch sessions');
@@ -285,7 +282,7 @@ export const GeneralProvider = ({ children }) => {
 
   const fetchTerms = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms`);
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms`);
       const data = await response.json();
       setTerms(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -296,7 +293,7 @@ export const GeneralProvider = ({ children }) => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects`);
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects`);
 
       if (response.ok) {
         const data = await response.json();
@@ -310,7 +307,7 @@ export const GeneralProvider = ({ children }) => {
   
   const fetchClasses = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/sessions/${selectedSessionId}/terms/${selectedTermId}/classes`);
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes`);
       if (response.ok) {
         const data = await response.json();
         setClasses(data);
@@ -322,7 +319,7 @@ export const GeneralProvider = ({ children }) => {
 
 const fetchUsers = async () => {
   try {
-    const response = await fetch ('http://localhost:3000/api/auth/users');
+    const response = await fetch ('https://iplan-backend.onrender.com/api/auth/users');
     if(response.ok) {
       const data  = await response.json();
       setUsers(data)
