@@ -1,15 +1,16 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/uploads': {
-        target: 'http://iplan-backend.onrender.com',
+      '/api': {
+        target: 'https://iplan-backend.onrender.com', // Ensure using HTTPS
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/uploads/, '/uploads'), 
+        secure: false, // If using a self-signed certificate
       },
     },
   },
-});
+})
