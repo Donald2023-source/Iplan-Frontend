@@ -246,18 +246,26 @@ export const GeneralProvider = ({ children }) => {
   };
   
   const fetchSessions = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('https://iplan-backend.onrender.com/sessions');
       if (!response.ok) {
         setIsFailed(true);
+        setIsFailed(true)
+        setMessage('Something went wrong')
         throw new Error('Failed to fetch sessions');
+      } else {
+        setIsLoading(false)
       }
       const data = await response.json();
       setSessions(Array.isArray(data) ? data : []);
+      setIsLoading(false)
     } catch (error) {
       console.error('Error fetching sessions:', error.message);
-      
+      setIsLoading(false)
       setSessions([]);
+      setIsFailed(true)
+      setMessage('Something went wrong')
     }
   };
 

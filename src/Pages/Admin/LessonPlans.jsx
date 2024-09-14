@@ -25,7 +25,7 @@ const LessonPlans = () => {
     }
   }
 
-  const { selectedSession, selectedSessionId, selectedTermId, selectedClassId, classId, selectedTerm, setSelectedSession, setSelectedTerm, setSelectedTermId, classes, sessions,terms, setSelectedSessionId, fetchSessions, handleSessionChange, handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect, classItems, myId, setIsSuccess, isSuccess, isLoading, setIsLoading, isFailed, setIsFailed, Error, realTime,
+  const { selectedSession, selectedSessionId, selectedTermId, selectedClassId, classId, selectedTerm, setSelectedSession, setSelectedTerm, setSelectedTermId, classes, sessions,terms, setSelectedSessionId, fetchSessions, handleSessionChange, handleTermChange, fetchTerms, fetchSubjects, fetchClasses, handleClassSelect, classItems, myId, setIsSuccess, isSuccess, isLoading, setIsLoading, isFailed, setIsFailed, Error,
   setError, message, setMessage
   } = useContext(GeneralContext);
 
@@ -64,7 +64,15 @@ const LessonPlans = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [deleteLessonPlan, setDeleteLessonPlan] = useState(false);
   const [isConfirmDeleteLessonPlan, setIsConfirmDeleteLessonPlan] = useState(false);
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
+  const [isPdfVisible, setIsPdfVisible] = useState(false)
+
+  const [selectedLessonPlanUrl, setSelectedLessonPlanUrl] = useState(null);
+
+  // Function to handle selecting a lesson plan and showing its PDF
+  const handleLessonPlanSelect = (fileUrl) => {
+    setSelectedLessonPlanUrl(fileUrl); // Set the file URL of the selected lesson plan
+  };
 
 
   const toggleConfirmation = () => {
@@ -318,6 +326,7 @@ const toggleIsLessonPlanDelete = () => {
       // console.log(data);
       if (Array.isArray(data)) {
         setLessonPlans(data);
+        console.log(data)
       } else {
         setLessonPlans([]);
       }
@@ -585,15 +594,15 @@ const toggleIsLessonPlanDelete = () => {
 
 
               {/* ========Comment====== */}
-              <div className="flex items-center justify-between mx-auto w-[95%]">
+              <div className="flex items-center justify-between py-4 mx-auto w-[95%]">
                 <input
                   type="checkbox"
                   checked={selectedLessonPlanIds.includes(plan._id)}
                   onChange={e => handleLessonPlanCheckboxChange(e, plan._id)}
                   required
                 />
-                <h2 className="lg:text-md hidden">{plan.title}</h2>
-                <h2 className="lg:block hidden">{plan.subjectName}</h2>          
+                <h2 className="lg:text-md  hidden">{plan.title}</h2>
+                <h2 className="lg:block  w-32 hidden">{plan.subjectName}</h2>          
              
              <fieldset  className="shadow-lg hidden lg:flex items-center lg:text-md text-sm md:text-md justify-around rounded-lg bg-white  w-64">
               
@@ -610,17 +619,17 @@ const toggleIsLessonPlanDelete = () => {
 
               <FaComment onClick={handleCommentToggle} className="lg:hidden cursor-pointer" color="#6675FF" size={20}/>
                
-               
-             <button onClick={handlePdfViewer} className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border">
-                  View
-                </button>
+              
+              <button onClick={() => setIsPdfVisible(!isPdfVisible)} className="border py-2 px-9  bg-blue-800 text-white rounded">{isPdfVisible? "Close" : "View"}</button>
 
-                {isVisible && (
-                 <MyPdfViewer fileUrl={plan.fileUrl}/>
-                )}
+                
              
                <FaTrash onClick={toggleIsLessonPlanDelete} className="cursor-pointer" color="#6675FF" size={20}/>
             </div>
+            {isPdfVisible && (
+              <MyPdfViewer fileUrl={plan.file}/>
+            )}
+            
 
             <div onClick={handleCommentToggle} className={toggleComment ? "h-screen inset-0 fixed opacity-60 bg-black" : 'hidden'}/>
 
@@ -642,10 +651,9 @@ const toggleIsLessonPlanDelete = () => {
                 )}
                 <FaTelegram className="cursor-pointer mt-5"  onClick={() => submitComment(plan._id)}  color="#6675FF" size={50}/>
                 </div>
-                <div className={isViewerVisible ? 'flex' : 'hidden'}>
-                   <PdfViewer fileUrl = {plan.fileUrl}/>
-                </div>
-               
+              
+                   
+             
             </div>
             
           ))}
@@ -689,7 +697,8 @@ const toggleIsLessonPlanDelete = () => {
               <div>
 
               {isLoading ? (
-                 <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
+                 <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center', gap: '1rem'}}>
+                  <h2 className="text-xl font-semibold text-white">Loading</h2>
             <ThreeDots visible={true} height="80" width="80" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}}wrapperClass=""/>
             </div>     
             ) : ('')}

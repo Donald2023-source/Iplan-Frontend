@@ -80,7 +80,7 @@ const UserDashboard = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [isPdfViewerVisible, setIsPdfViewerVisible] = useState(false);
+  const [isPdfVisible, setIsPdfVisible] = useState(false);
   const [comments, setComments] = useState([]);
   const [currentLessonPlan, setCurrentLessonPlan] = useState({});
   const [updatedTitle, setUpdatedTitle] = useState("");
@@ -186,62 +186,62 @@ const UserDashboard = () => {
   }, [selectedSubjectId]);
 
   const handleFileChange = (e) => {
+    // const file = e.target.files[0]
     setSelectedFile(e.target.files[0]);
   };
 
   const handleFileUpload = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+  
     if (!title) {
       setErrorMessage("Title is required");
+      setIsLoading(false);
       return;
     }
     if (!selectedFile) {
       setErrorMessage("File is required");
+      setIsLoading(false);
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("lessonPlan", selectedFile);
     formData.append("title", title);
-
+  
     try {
-      const response = await fetch(
-        `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`, {
+        method: "POST",
+        body: formData,
+        // Do not set Content-Type header manually
+      });
+  
       const data = await response.json();
-      setIsLoading(false)
+      setIsLoading(false);
+  
       if (response.ok) {
         console.log("File uploaded successfully", data);
         setTitle("");
         setSelectedFile(null);
-        setIsLoading(false);
         setErrorMessage("");
         setUploadSuccess(true);
-        setMessage("");
-        // Fetch updated lesson plans after uploading a new lesson plan
         fetchUserLessonPlans();
       } else {
         setErrorMessage(data.error || "Failed to upload file");
-        setIsLoading(false)
-        setIsFailed(true)
-        setMessage(data.message)
+        setIsFailed(true);
+        setMessage(data.message);
       }
     } catch (error) {
       setErrorMessage("Error uploading file: " + error.message);
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
+  
   const fetchUserLessonPlans = async () => {
     try {
-      const response = await fetch(
-        `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`
+      const response = await fetch(`https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans`
       );
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -255,11 +255,13 @@ const UserDashboard = () => {
     }
   };
 
-  const handleLessonPlanSelect = (lessonPlanId) => {
+  const handleLessonPlanSelect = (lessonPlanId, fileUrl) => {
     localStorage.setItem("selectedLessonPlanId", lessonPlanId);
     setSelectedLessonPlanId(lessonPlanId);
+    window.open(fileUrl, "_blank");
     fetchComments();
   };
+  
 
   useEffect(() => {
     if (
@@ -278,13 +280,12 @@ const UserDashboard = () => {
   const fetchComments = async () => {
     try {
       if (selectedLessonPlanId) {
-        const response = await fetch(
-          `https://iplan-backend.onrender.com/sessions/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}/comments`
+        const response = await fetch(`https://iplan-backend.onrender.com/${selectedSessionId}/terms/${selectedTermId}/classes/${selectedClassId}/subjects/${selectedSubjectId}/lessonPlans/${selectedLessonPlanId}/comments`
         );
 
         if (response.ok) {
           const data = await response.json();
-          setComments(data || []);
+          setComments(data);
           console.log(data);
         } else {
           console.error("Failed to fetch comments:", response.statusText);
@@ -471,13 +472,15 @@ const UserDashboard = () => {
                 onChange={handleTitleChange}
                 placeholder="Please enter your lesson plan title"
                 type="text"
-                className="p-2 border w-[20rem] lg:w-[25rem] rounded-lg"
+                className="p-2 border w-[20rem] lg:w-[25rem] rounded-lg"x
               />
             </div>
 
             <div className="flex gap-4 items-center">
               <label>File</label>
               <input
+                accept=".pdf" 
+                required
                 className="p-2 lg:w-[25rem] rounded-lg border"
                 name="lessonPlan"
                 onChange={handleFileChange}
@@ -579,56 +582,35 @@ const UserDashboard = () => {
         </div>
       )}
 
-      <div className="flex items-center justify-around">
-        <div>
-          <h2 className="text-center">My Lesson Plans</h2>
-          <div>
-            {Array.isArray(lessonPlans) &&
-              lessonPlans.map((plan) => (
-                <div
-                  key={plan._id}
-                  onClick={() => handleLessonPlanSelect(plan._id)}
-                >
-                  <div className="flex justify-between w-screen px-3">
-                    <h2>{plan.title}</h2>
+      <div className="flex flex-col items-center justify-around">
+<div className="flex">
+  <div>
+    {Array.isArray(lessonPlans) &&
+      lessonPlans.map((plan) => (
+        <div key={plan._id}>
+        <div className="flex flex-col">
+          <div className="flex flex-col items-center justify-between w-screen px-3">
+            <span className="flex items-center justify-between w-screen px-8">
+                <h2 className="font-semibold text-lg">Title: {plan.title}</h2>
+                <h2 className="font-semibold">Comment: {plan.comments && plan.comments.length > 0 ? plan.comments[0].text : "No comments  available"}</h2>
 
-                    <div className="flex items-center gap-10">
-                    <button
-                      onClick={() => setIsPdfViewerVisible(!isPdfViewerVisible)}
-                      className="py-1 px-5 text-white bg-[#6675FF] rounded-lg hover:bg-[#4553d0] transition border"
-                    >
-                      {isPdfViewerVisible ? "Close" : "View"}
-                    </button>
-
-                    <FaEdit
-                      onClick={handleUpdateDialogue}
-                      size={30}
-                      color="blue"
-                    />
-                  </div>
-                  
-                  </div>
-
-                  
-                  {/* =============Comment========= */}
-                  <div>
-                    {comments.map((comment) => (
-                      <span
-                        className="flex ml-3 py-4 gap-2 items-center"
-                        key={comment._id}
-                      >
-                        <h2 className="font-semibold">Comment: </h2>
-                        <h2 className="text-md">{comment.text}!</h2>
-                      </span>
-                    ))}
-                  </div>
-
-
-                  {isPdfViewerVisible && <MyPdfViewer fileUrl={plan.fileUrl} />}
-                </div>
-              ))}
+                <button onClick={() => setIsPdfVisible(!isPdfVisible)} className="border py-3 px-9  bg-blue-800 text-white rounded">{isPdfVisible? "Close" : "View"}</button>
+            </span>
+               
           </div>
+
+          {isPdfVisible && (
+             <MyPdfViewer fileUrl={plan.file}/>
+          )}
+         
         </div>
+        </div>
+      ))}
+      
+  </div>
+</div>
+
+
       </div>
       {isLoading ? (
         <div

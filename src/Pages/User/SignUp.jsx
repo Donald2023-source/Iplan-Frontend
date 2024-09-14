@@ -129,6 +129,15 @@ const SignUp = () => {
             </div>     
             ) : (console.log('Not Loading'))}
       
+{/* 
+      {isLoading ? (
+          <div style={{"height": '100vh', 'width': '100vw', 'backgroundColor': 'black', 'opacity': '0.92', position : 'absolute', top: '0', display: "flex", justifyContent: 'center', alignItems:'center'}}>
+           <Bars height="80" width="80" color="#4fa94d" ariaLabel="bars-loading" wrapperStyle={{}} wrapperClass=""
+              visible={true}
+              />
+          </div>
+            
+        ) : ''} */}
         </>
     );
 };
